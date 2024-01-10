@@ -1,60 +1,60 @@
 package com.springboot.todo.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
+@Table(name = "\"user\"")
+@Setter
+@Getter
+@SQLDelete(sql = "UPDATE \"user\" SET removed_at = NOW() WHERE id=?")
+@SQLRestriction("removed_at is NULL")
 public class User {
 
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    private  long userId;
+    private  Integer id;
+
     @Size(min = 2, message = "ID should have atleast 2 characters")
     @Column(unique = true)
     private String username;
+
     @Size(min = 4, message = "ID should have atleast 4 characters")
     private String password;
 
-    public User(long id, String username, String password) {
-        this.userId = id;
-        this.username = username;
-        this.password = password;
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USER;
+
+    @Column(name = "registered_at")
+    private Timestamp registeredAt;
+
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    @Column(name = "removed_at")
+    private Timestamp removedAt;
+
+    @PrePersist
+    void registeredAt() {
+        this.registeredAt = Timestamp.from(Instant.now());
+    }
+    @PreUpdate
+    void updatedAt() {
+        this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public long getId() {
-        return userId;
-    }
-
-    public void setId(long id) {
-        this.userId = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + userId +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public static User of(String username, String encodedPassword) {
+        User entity = new User();
+        entity.setUsername(username);
+        entity.setPassword(encodedPassword);
+        return entity;
     }
 }

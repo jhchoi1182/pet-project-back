@@ -18,6 +18,9 @@ public class SecurityConfiguration {
         return http.authorizeHttpRequests(
                     auth -> auth
                             .requestMatchers(
+                                    "/"
+                            ).permitAll()
+                            .requestMatchers(
                                     HttpMethod.POST,
                                     "/user/signup",
                                     "/user/login"

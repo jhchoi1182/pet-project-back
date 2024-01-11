@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local:
+        - common
+      prod:
+        - common
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/todos
+    username: jhchoi1182
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org:
+      springframework: info
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://todo-database:3306/todos
+    username: jhchoi1182
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: validate
+
+pharmacy:
+  recommendation:
+    base:
+      url: http://localhost/dir/
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: common
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  token:
+    expired-time-ms: 2592000000

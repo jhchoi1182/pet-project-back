@@ -14,8 +14,8 @@ public class JwtTokenUtils {
     public static String generateToken(String username, String encodedPassword, String key, long expiredTimeMs) {
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("password", encodedPassword);
         claims.put("username", username);
+        claims.put("password", encodedPassword);
 
         long nowMillis = System.currentTimeMillis();
 

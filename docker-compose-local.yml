@@ -2,14 +2,16 @@ version: "3.8"
 services:
   todo-database:
     container_name: todo-database
-    image: mysql:8.0.34
+    build:
+      dockerfile: Dockerfile
+      context: ./database
+    image: jhchoi1182/todo-database
     environment:
-      - MYSQL_DATABASE=todos
       - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - MYSQL_USER=jhchoi1182
       - MYSQL_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=todos
     volumes:
       - ./database/config:/etc/mysql/conf.d
     ports:
-      - "3307:3306"
+      - "3306:3306"

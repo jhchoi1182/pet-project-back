@@ -37,6 +37,15 @@ public class UserService {
         return UserDto.from(user);
     }
 
+    public void checkUser(String username) {
+        if (username == null || username.contains(" ")) {
+            throw new TodoExceptionHandler(ErrorCode.INVALID_INFO, "Username cannot be empty or contain spaces");
+        }
+        userRepository.findByUsername(username).ifPresent(it -> {
+            throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
+        });
+    }
+
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new TodoExceptionHandler(ErrorCode.INVALID_INFO));
 

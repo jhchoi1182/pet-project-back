@@ -4,6 +4,7 @@ import com.springboot.todo.dto.UserDto;
 import com.springboot.todo.dto.request.LoginRequest;
 import com.springboot.todo.dto.request.SignupRequest;
 import com.springboot.todo.dto.response.LoginResponse;
+import com.springboot.todo.dto.response.MessageResponse;
 import com.springboot.todo.dto.response.Response;
 import com.springboot.todo.dto.response.SignupResponse;
 import com.springboot.todo.service.UserService;
@@ -23,6 +24,12 @@ public class UserController {
     public Response<SignupResponse> createUser(@RequestBody SignupRequest request) {
         UserDto user = userService.createUser(request.getUsername(), request.getPassword(), request.getPasswordConfirm());
         return Response.success(SignupResponse.from(user));
+    }
+
+    @GetMapping("/check-username")
+    public Response<MessageResponse> checkUser(String username) {
+        userService.checkUser(username);
+        return Response.success(new MessageResponse("The ID is available."));
     }
 
     @PostMapping("/login")

@@ -55,6 +55,15 @@ public class UserService {
         return JwtTokenUtils.generateToken(username, user.getPassword(), secretKey, expiredTimeMs);
     }
 
+    public String loginAsGuest() {
+        User guestUser = userRepository.findByUsername("guest")
+                .orElseGet(() -> userRepository.save(User.of("guest", encoder.encode("321321"))));
+
+        return JwtTokenUtils.generateToken(guestUser.getUsername(), guestUser.getPassword(), secretKey, expiredTimeMs);
+    }
+
+
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

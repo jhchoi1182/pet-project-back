@@ -7,6 +7,7 @@ import com.springboot.todo.dto.response.LoginResponse;
 import com.springboot.todo.dto.response.MessageResponse;
 import com.springboot.todo.dto.response.Response;
 import com.springboot.todo.dto.response.SignupResponse;
+import com.springboot.todo.exception.ErrorCode;
 import com.springboot.todo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,10 +34,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public Response<LoginResponse> login(@RequestBody LoginRequest request) {
-        String token = userService.login(request.getUsername(), request.getPassword());
-        return Response.success(new LoginResponse(token));
+    public ResponseEntity<Response<LoginResponse>> login(@RequestParam(value = "type", required = true) String type, @RequestBody LoginRequest request) {
+        String token;
+        if ("guest".equals(type)) {
+            token = userService.loginAsGuest();
+            return ResponseEntity.ok(Response.success(new LoginResponse(token)));
+        } else if ("user".equals(type)) {
+            token = userService.login(request.getUsername(), request.getPassword());
+            return ResponseEntity.ok(Response.success(new LoginResponse(token)));
+        }
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {

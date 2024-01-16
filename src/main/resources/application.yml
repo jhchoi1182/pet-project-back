@@ -48,12 +48,12 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST}:3306/todos
+    url: jdbc:mysql://todo-database:3306/todos
     username: jhchoi1182
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
 
 todo:

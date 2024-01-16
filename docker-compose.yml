@@ -23,7 +23,6 @@ services:
     image: jhchoi1182/todo-app
     environment:
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - MYSQL_HOST=${MYSQL_HOST}
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     ports:

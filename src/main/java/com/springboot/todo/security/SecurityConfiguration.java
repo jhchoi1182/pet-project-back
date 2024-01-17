@@ -1,5 +1,10 @@
 package com.springboot.todo.security;
 
+import com.springboot.todo.exception.CustomAuthenticationEntryPoint;
+import com.springboot.todo.repository.UserRepository;
+import com.springboot.todo.util.JwtTokenFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,14 +13,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfiguration {
+
+    private final UserRepository userRepository;
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http.authorizeHttpRequests(
+        http
+                .authorizeHttpRequests(
                     auth -> auth
                             .requestMatchers(
                                     "/"
@@ -25,10 +37,6 @@ public class SecurityConfiguration {
                                     "/user/signup",
                                     "/user/login"
                             ).permitAll()
-                            .requestMatchers(
-                                    HttpMethod.DELETE,
-                                    "/user/delete/{id}"
-                            ).permitAll()
                             .anyRequest()
                             .authenticated())
                 .sessionManagement(
@@ -36,10 +44,13 @@ public class SecurityConfiguration {
                             session.sessionCreationPolicy(
                                     SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
-                // TODO
-//                .exceptionHandling()
-//                .authenticationEntryPoint()
-                .build();
+                .addFilterBefore(new JwtTokenFilter(userRepository, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling((exceptionHandling) ->
+                        exceptionHandling
+                                .accessDeniedPage("/errors/access-denied")
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+
+        return http.build();
     }
 
     @Bean

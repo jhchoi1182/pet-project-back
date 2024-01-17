@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "`user`")
 @Setter
 @Getter
-@SQLDelete(sql = "UPDATE \"user\" SET removed_at = NOW() WHERE id=?")
+@SQLDelete(sql = "UPDATE `user` SET removed_at = NOW() WHERE user_id=?")
 @SQLRestriction("removed_at is NULL")
 public class User {
 
@@ -51,10 +51,11 @@ public class User {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static User of(String username, String encodedPassword) {
+    public static User of(String username, String encodedPassword, UserRole role) {
         User entity = new User();
         entity.setUsername(username);
         entity.setPassword(encodedPassword);
+        entity.setRole(role);
         return entity;
     }
 }

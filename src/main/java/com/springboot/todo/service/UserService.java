@@ -2,6 +2,7 @@ package com.springboot.todo.service;
 
 import com.springboot.todo.dto.UserDto;
 import com.springboot.todo.entity.User;
+import com.springboot.todo.entity.UserRole;
 import com.springboot.todo.exception.ErrorCode;
 import com.springboot.todo.exception.TodoExceptionHandler;
 import com.springboot.todo.repository.UserRepository;
@@ -33,7 +34,7 @@ public class UserService {
                     throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
         });
 
-        User user = userRepository.save(User.of(username, encoder.encode(password)));
+        User user = userRepository.save(User.of(username, encoder.encode(password), UserRole.USER));
         return UserDto.from(user);
     }
 
@@ -47,7 +48,7 @@ public class UserService {
     }
 
     public String login(String username, String password) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new TodoExceptionHandler(ErrorCode.INVALID_INFO));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
         if (!encoder.matches(password, user.getPassword())) {
             throw new TodoExceptionHandler(ErrorCode.INVALID_INFO);
@@ -57,15 +58,20 @@ public class UserService {
 
     public String loginAsGuest() {
         User guestUser = userRepository.findByUsername("guest")
-                .orElseGet(() -> userRepository.save(User.of("guest", encoder.encode("321321"))));
+                .orElseGet(() -> userRepository.save(User.of("guest", encoder.encode("321321"), UserRole.GUEST)));
 
         return JwtTokenUtils.generateToken(guestUser.getUsername(), guestUser.getPassword(), secretKey, expiredTimeMs);
     }
 
-
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    @Transactional
+    public void deleteUser(Integer id) {
+        User user = userRepository.findById(id).orElseThrow(() ->
+                new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        if (user.getRemovedAt() == null) {
+            userRepository.deleteById(id);
+        } else {
+            throw new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND, "User already deleted");
+        }
     }
 
 }

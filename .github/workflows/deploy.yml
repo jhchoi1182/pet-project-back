@@ -1,4 +1,4 @@
-name: EC2 Deploy
+name: EC2 CI/CD
 
 on:
   push:
@@ -16,12 +16,18 @@ jobs:
         echo "${{ secrets.EC2_SSH_KEY }}" > ec2_ssh_key.pem
         chmod 600 ec2_ssh_key.pem
 
-    - name: Connect to EC2 and Deploy
+    - name: Update server code
       run: |
-        ssh -o StrictHostKeyChecking=no -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
-          cd todo-server
-          git pull origin main
-          ./gradlew clean build
-          docker-compose up --build -d
-          docker image prune -f
-        EOF
+        ssh -o StrictHostKeyChecking=no -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }} "cd todo-server && git pull origin main"
+
+    - name: Build project
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }} "cd todo-server && ./gradlew clean build"
+
+    - name: Rebuild and restart Docker containers
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }} "cd todo-server && docker-compose up --build -d"
+
+    - name: Prune Docker images
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }} "docker image prune -f"

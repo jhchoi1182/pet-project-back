@@ -47,6 +47,13 @@ public class TodoService {
         return TodoDto.fromEntity(todoRepository.save(todo));
     }
 
+    @Transactional
+    public void deleteTodo(Integer todoId, String username) {
+        Todo todo = getTodoIfAuthorized(todoId, username);
+
+        todoRepository.delete(todo);
+    }
+
     private Todo getTodoIfAuthorized(Integer todoId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() ->
                 new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not found", username)));

@@ -35,4 +35,10 @@ public class TodoController {
         return Response.success(TodoResponse.fromDto(todo));
     }
 
+    @DeleteMapping("/{todoId}")
+    public Response<Void> delete(@PathVariable Integer todoId, Authentication authentication) {
+        todoService.deleteTodo(todoId, authentication.getName());
+        return Response.success();
+    }
+
 }

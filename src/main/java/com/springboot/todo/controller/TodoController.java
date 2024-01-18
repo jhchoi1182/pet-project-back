@@ -7,8 +7,12 @@ import com.springboot.todo.dto.response.Response;
 import com.springboot.todo.dto.response.TodoResponse;
 import com.springboot.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/todo")
@@ -16,6 +20,14 @@ import org.springframework.web.bind.annotation.*;
 public class TodoController {
 
     private final TodoService todoService;
+
+    @GetMapping
+    public Response<List<TodoResponse>> getList(Authentication authentication) {
+        List<TodoDto> todos = todoService.getTodos(authentication.getName());
+        return Response.success(todos.stream()
+                .map(TodoResponse::fromDto)
+                .collect(Collectors.toList()));
+    }
 
     @PostMapping
     public Response<Void> create(@RequestBody TodoCreateRequest request, Authentication authentication) {

@@ -14,7 +14,7 @@ import java.time.Instant;
 @Table(name = "`comment`")
 @Setter
 @Getter
-@SQLDelete(sql = "UPDATE `comment` SET removed_at = NOW() WHERE todo_id=?")
+@SQLDelete(sql = "UPDATE `comment` SET removed_at = NOW() WHERE comment_id=?")
 @SQLRestriction("removed_at is NULL")
 public class Comment {
 

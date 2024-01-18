@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CommonService {
+public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final TodoRepository todoRepository;
@@ -25,12 +25,18 @@ public class CommonService {
                 new TodoExceptionHandler(ErrorCode.TODO_NOT_FOUND, String.format("%s is not found", todoId)));
     }
 
+    public void validatePermission(Todo todo, User user) {
+        if(todo.getUser() != user) {
+            throw new TodoExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with todo %d", user.getUsername(), todo.getId()));
+        }
+    }
+
     public Todo getTodoIfAuthorized(Integer todoId, String username) {
         User user = getUserOrThrowException(username);
         Todo todo = getTodoOrThrowException(todoId);
 
         if(todo.getUser() != user) {
-            throw new TodoExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with post %d", username, todoId));
+            throw new TodoExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with todo %d", username, todoId));
         }
         return todo;
     }

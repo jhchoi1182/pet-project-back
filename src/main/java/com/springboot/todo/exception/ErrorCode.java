@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User has invalid permission"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User is not found"),
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "Todo is not found"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment is not found"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     ;

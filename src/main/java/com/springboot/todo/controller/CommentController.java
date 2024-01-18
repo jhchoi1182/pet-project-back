@@ -21,7 +21,7 @@ public class CommentController {
 
     @GetMapping("/{todoId}/comment")
     public Response<List<CommentResponse>> getList(@PathVariable Integer todoId, Authentication authentication) {
-        List<CommentDto> comment = commentService.getComments(todoId);
+        List<CommentDto> comment = commentService.getComments(todoId, authentication.getName());
         return Response.success(comment.stream()
                 .map(CommentResponse::fromDto)
                 .collect(Collectors.toList()));
@@ -31,7 +31,18 @@ public class CommentController {
     public Response<Void> comment(@PathVariable Integer todoId, @RequestBody CommentRequest request, Authentication authentication) {
         commentService.create(todoId, request.getComment(), authentication.getName());
         return Response.success();
+    }
 
+    @PutMapping("/{todoId}/comment/{commentId}")
+    public Response<CommentResponse> update(@PathVariable Integer commentId, @RequestBody CommentRequest request, Authentication authentication) {
+        CommentDto comment = commentService.update(commentId, request.getComment(), authentication.getName());
+        return Response.success(CommentResponse.fromDto(comment));
+    }
+
+    @DeleteMapping("/{todoId}/comment/{commentId}")
+    public Response<Void> delete(@PathVariable Integer commentId, Authentication authentication) {
+        commentService.delete(commentId, authentication.getName());
+        return Response.success();
     }
 
 

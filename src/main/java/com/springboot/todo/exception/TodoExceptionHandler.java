@@ -10,7 +10,6 @@ public class TodoExceptionHandler extends RuntimeException {
     private ErrorCode errorCode;
     private String message;
 
-
     public TodoExceptionHandler(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;

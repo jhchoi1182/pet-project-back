@@ -23,7 +23,7 @@ public class UserController {
     @PostMapping("/signup")
     public Response<UserSignupResponse> createUser(@RequestBody UserSignupRequest request) {
         UserDto user = userService.createUser(request.getUsername(), request.getPassword(), request.getPasswordConfirm());
-        return Response.success(UserSignupResponse.from(user));
+        return Response.success(UserSignupResponse.fromDto(user));
     }
 
     @GetMapping("/check-username")
@@ -33,12 +33,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response<UserLoginResponse>> login(@RequestParam(value = "type", required = true) String type, @RequestBody UserLoginRequest request) {
+    public ResponseEntity<Response<UserLoginResponse>> login(@RequestParam(value = "type", required = true) String type, @RequestBody(required = false) UserLoginRequest request) {
         String token;
         if ("guest".equals(type)) {
             token = userService.loginAsGuest();
             return ResponseEntity.ok(Response.success(new UserLoginResponse(token)));
         } else if ("user".equals(type)) {
+            if (request == null || request.getUsername() == null || request.getPassword() == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             token = userService.login(request.getUsername(), request.getPassword());
             return ResponseEntity.ok(Response.success(new UserLoginResponse(token)));
         }

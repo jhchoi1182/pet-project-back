@@ -35,7 +35,7 @@ public class UserService {
         });
 
         User user = userRepository.save(User.of(username, encoder.encode(password), UserRole.USER));
-        return UserDto.from(user);
+        return UserDto.fromEntity(user);
     }
 
     public void checkUser(String username) {

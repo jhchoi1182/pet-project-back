@@ -20,7 +20,7 @@ import java.util.Map;
 public class JwtTokenUtils {
 
     public static UserDto validatedUser(UserRepository userRepository, String username, String password) {
-        UserDto user = UserDto.from(userRepository.findByUsername(username).orElseThrow(() ->
+        UserDto user = UserDto.fromEntity(userRepository.findByUsername(username).orElseThrow(() ->
                 new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", username))));
 
         if (!password.equals(user.getPassword())) {

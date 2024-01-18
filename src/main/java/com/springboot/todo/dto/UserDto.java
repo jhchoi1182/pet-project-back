@@ -24,7 +24,7 @@ public class UserDto implements UserDetails {
     private Timestamp updatedAt;
     private Timestamp removedAt;
 
-    public static UserDto from(User entity) {
+    public static UserDto fromEntity(User entity) {
         return new UserDto(
                 entity.getId(),
                 entity.getUsername(),

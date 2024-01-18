@@ -11,7 +11,7 @@ public class UserSignupResponse {
     private Integer id;
     private String username;
 
-    public static UserSignupResponse from(UserDto user) {
+    public static UserSignupResponse fromDto(UserDto user) {
         return new UserSignupResponse(
                 user.getId(),
                 user.getUsername()

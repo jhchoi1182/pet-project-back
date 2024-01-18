@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 public class UserDto implements UserDetails {
 
-    private Integer id;
+    private Integer userId;
     private String username;
     private String password;
     private UserRole role;

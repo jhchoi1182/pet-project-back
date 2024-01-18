@@ -8,12 +8,12 @@ import lombok.Getter;
 @Getter
 public class UserSignupResponse {
 
-    private Integer id;
+    private Integer userId;
     private String username;
 
     public static UserSignupResponse fromDto(UserDto user) {
         return new UserSignupResponse(
-                user.getId(),
+                user.getUserId(),
                 user.getUsername()
         );
     }

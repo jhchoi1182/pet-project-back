@@ -1,5 +1,6 @@
 package com.springboot.todo.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class User {
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    private  Integer id;
+    private Integer id;
 
     @Size(min = 2, message = "ID should have atleast 2 characters")
     @Column(unique = true)

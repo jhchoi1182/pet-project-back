@@ -1,5 +1,6 @@
 package com.springboot.todo.service;
 
+import com.springboot.todo.dto.TodoDto;
 import com.springboot.todo.entity.Todo;
 import com.springboot.todo.entity.User;
 import com.springboot.todo.exception.ErrorCode;
@@ -25,6 +26,38 @@ public class TodoService {
                 new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("userName is %s", username)));
 
         todoRepository.save(Todo.of(contents, dueDate, user));
+    }
+
+    @Transactional
+    public TodoDto updateContents(Integer todoId, String contents, String dueDate, String username) {
+        Todo todo = getTodoIfAuthorized(todoId, username);
+
+        todo.setContents(contents);
+        todo.setDueDate(dueDate);
+
+        return TodoDto.fromEntity(todoRepository.save(todo));
+    }
+
+    @Transactional
+    public TodoDto updateIsDone(Integer todoId, String username) {
+        Todo todo = getTodoIfAuthorized(todoId, username);
+
+        todo.setIsDone(!todo.getIsDone());
+
+        return TodoDto.fromEntity(todoRepository.save(todo));
+    }
+
+    private Todo getTodoIfAuthorized(Integer todoId, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+                new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not found", username)));
+
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
+                new TodoExceptionHandler(ErrorCode.TODO_NOT_FOUND, String.format("%s is not found", todoId)));
+
+        if(todo.getUser() != user) {
+            throw new TodoExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with post %d", username, todoId));
+        }
+        return todo;
     }
 
 }

@@ -22,7 +22,7 @@ public class Todo {
     @Id
     @GeneratedValue
     @Column(name = "todo_id")
-    private  Integer id;
+    private Integer id;
 
     @Size(min = 2, message = "Todo should have atleast 2 characters")
     private String contents;
@@ -30,6 +30,8 @@ public class Todo {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private Boolean isDone = false;
 
     @Column(name = "due_date")
     private String dueDate;

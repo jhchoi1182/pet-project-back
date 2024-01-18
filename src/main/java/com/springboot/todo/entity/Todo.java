@@ -9,7 +9,6 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "`todo`")
@@ -24,7 +23,7 @@ public class Todo {
     @Column(name = "todo_id")
     private Integer id;
 
-    @Size(min = 2, message = "Todo should have atleast 2 characters")
+    @Size(min = 1, message = "Todo should have atleast 1 characters")
     private String contents;
 
     @ManyToOne

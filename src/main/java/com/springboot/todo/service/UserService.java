@@ -64,11 +64,11 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() ->
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
                 new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND));
         if (user.getRemovedAt() == null) {
-            userRepository.deleteById(id);
+            userRepository.deleteById(user.getId());
         } else {
             throw new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND, "User already deleted");
         }

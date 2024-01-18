@@ -11,6 +11,7 @@ import com.springboot.todo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -48,15 +49,10 @@ public class UserController {
         else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Integer id) {
-        try {
-            userService.deleteUser(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("/delete")
+    public Response<Void> deleteUser(Authentication authentication) {
+        userService.deleteUser(authentication.getName());
+        return Response.success();
     }
 
 

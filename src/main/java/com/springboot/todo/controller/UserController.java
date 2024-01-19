@@ -1,6 +1,7 @@
 package com.springboot.todo.controller;
 
 import com.springboot.todo.dto.UserDto;
+import com.springboot.todo.dto.request.UserCheckRequest;
 import com.springboot.todo.dto.request.UserLoginRequest;
 import com.springboot.todo.dto.request.UserSignupRequest;
 import com.springboot.todo.dto.response.MessageResponse;
@@ -9,6 +10,7 @@ import com.springboot.todo.dto.response.UserLoginResponse;
 import com.springboot.todo.dto.response.UserSignupResponse;
 import com.springboot.todo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -27,9 +30,10 @@ public class UserController {
         return Response.success(UserSignupResponse.fromDto(user));
     }
 
-    @GetMapping("/check-username")
-    public Response<MessageResponse> checkUser(String username) {
-        userService.checkUser(username);
+    @PostMapping("/check-username")
+    public Response<MessageResponse> checkUser(@RequestBody UserCheckRequest request) {
+        log.info(String.valueOf(request));
+        userService.checkUser(request.getUsername());
         return Response.success(new MessageResponse("The ID is available."));
     }
 

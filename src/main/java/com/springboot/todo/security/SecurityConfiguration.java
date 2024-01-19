@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                             ).permitAll()
                             .requestMatchers(
                                     HttpMethod.POST,
+                                    "/user/check-username",
                                     "/user/signup",
                                     "/user/login"
                             ).permitAll()

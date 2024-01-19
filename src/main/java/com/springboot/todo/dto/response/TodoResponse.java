@@ -1,11 +1,8 @@
 package com.springboot.todo.dto.response;
 
 import com.springboot.todo.dto.TodoDto;
-import com.springboot.todo.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.sql.Timestamp;
 
 @AllArgsConstructor
 @Getter

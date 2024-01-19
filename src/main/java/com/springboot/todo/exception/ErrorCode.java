@@ -18,6 +18,7 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment is not found"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
+    CLASS_CAST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Casting error occurred")
     ;
 
     private final HttpStatus status;

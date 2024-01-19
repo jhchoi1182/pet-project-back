@@ -20,24 +20,21 @@ public class TodoService {
     private final CommentRepository commentRepository;
     private final AuthenticationService authenticationService;
 
-    @Transactional
-    public void create(String contents, String dueDate, String username) {
-        User user = authenticationService.getUserOrThrowException(username);
-
-        todoRepository.save(Todo.of(contents, dueDate, user));
-    }
-
-    public List<TodoDto> getTodos(String username) {
-        User user = authenticationService.getUserOrThrowException(username);
-
-        return todoRepository.findAllByUserId(user.getId()).stream()
+    public List<TodoDto> getTodos(Integer userId) {
+        return todoRepository.findAllByUserId(userId).stream()
                 .map(TodoDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public TodoDto updateContents(Integer todoId, String contents, String dueDate, String username) {
-        Todo todo = authenticationService.getTodoIfAuthorized(todoId, username);
+    public void create(String contents, String dueDate, String username) {
+        User user = authenticationService.getUserOrThrowException(username);
+        todoRepository.save(Todo.of(contents, dueDate, user));
+    }
+
+    @Transactional
+    public TodoDto updateContents(Integer todoId, String contents, String dueDate, Integer userId) {
+        Todo todo = authenticationService.getTodoIfAuthorized(todoId, userId);
 
         todo.setContents(contents);
         todo.setDueDate(dueDate);
@@ -46,8 +43,8 @@ public class TodoService {
     }
 
     @Transactional
-    public TodoDto updateIsDone(Integer todoId, String username) {
-        Todo todo = authenticationService.getTodoIfAuthorized(todoId, username);
+    public TodoDto toggleIsDone(Integer todoId, Integer userId) {
+        Todo todo = authenticationService.getTodoIfAuthorized(todoId, userId);
 
         todo.setIsDone(!todo.getIsDone());
 
@@ -55,12 +52,10 @@ public class TodoService {
     }
 
     @Transactional
-    public void deleteTodo(Integer todoId, String username) {
-        Todo todo = authenticationService.getTodoIfAuthorized(todoId, username);
+    public void deleteTodo(Integer todoId, Integer userId) {
+        Todo todo = authenticationService.getTodoIfAuthorized(todoId, userId);
         commentRepository.deleteAllByTodo(todo);
         todoRepository.delete(todo);
     }
-
-
 
 }

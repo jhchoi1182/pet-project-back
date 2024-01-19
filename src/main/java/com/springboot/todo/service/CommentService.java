@@ -22,19 +22,15 @@ public class CommentService {
     private final AuthenticationService authenticationService;
     private final CommentRepository commentRepository;
 
-    public List<CommentDto> getComments(Integer todoId, String username) {
-
-        Todo todo = authenticationService.getTodoIfAuthorized(todoId, username);
-
+    public List<CommentDto> getComments(Integer todoId, Integer userId) {
+        Todo todo = authenticationService.getTodoIfAuthorized(todoId, userId);
         return commentRepository.findAllByTodoId(todo.getId()).stream()
                 .map(CommentDto::fromEntity)
                 .collect(Collectors.toList());
-
     }
 
     @Transactional
     public void create(Integer todoId, String comment, String username) {
-
         Todo todo = authenticationService.getTodoOrThrowException(todoId);
         User user = authenticationService.getUserOrThrowException(username);
         authenticationService.validatePermission(todo, user);
@@ -44,8 +40,8 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto update(Integer commentId, String comment, String username) {
-        Comment commentEntity = getCommentIfAuthorized(commentId, username);
+    public CommentDto update(Integer commentId, String comment, Integer userId) {
+        Comment commentEntity = getCommentIfAuthorized(commentId, userId);
 
         commentEntity.setComment(comment);
 
@@ -53,17 +49,17 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Integer commentId, String username) {
-        Comment comment = getCommentIfAuthorized(commentId, username);
+    public void delete(Integer commentId, Integer userId) {
+        Comment comment = getCommentIfAuthorized(commentId, userId);
         commentRepository.delete(comment);
     }
 
-    private Comment getCommentIfAuthorized(Integer commentId, String username) {
+    private Comment getCommentIfAuthorized(Integer commentId, Integer userId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new TodoExceptionHandler(ErrorCode.COMMENT_NOT_FOUND, String.format("%s is not found", commentId)));
 
-        if(!Objects.equals(comment.getUser().getUsername(), username)) {
-            throw new TodoExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with comment %d", username, commentId));
+        if(!Objects.equals(comment.getUser().getId(), userId)) {
+            throw new TodoExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with comment %d", userId, commentId));
         }
         return comment;
     }

@@ -1,6 +1,7 @@
 package com.springboot.todo.controller;
 
 import com.springboot.todo.dto.UserDto;
+import com.springboot.todo.dto.request.UserCheckRequest;
 import com.springboot.todo.dto.request.UserLoginRequest;
 import com.springboot.todo.dto.request.UserSignupRequest;
 import com.springboot.todo.dto.response.MessageResponse;
@@ -27,9 +28,9 @@ public class UserController {
         return Response.success(UserSignupResponse.fromDto(user));
     }
 
-    @GetMapping("/check-username")
-    public Response<MessageResponse> checkUser(String username) {
-        userService.checkUser(username);
+    @PostMapping("/check-username")
+    public Response<MessageResponse> checkUser(@RequestBody UserCheckRequest request) {
+        userService.checkUser(request.getUsername());
         return Response.success(new MessageResponse("The ID is available."));
     }
 

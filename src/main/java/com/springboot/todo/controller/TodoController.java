@@ -32,6 +32,13 @@ public class TodoController {
                 .collect(Collectors.toList()));
     }
 
+    @GetMapping("/{todoId}")
+    public Response<TodoResponse> getTodo(@PathVariable Integer todoId, Authentication authentication) {
+        UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
+        TodoDto todo = todoService.getTodo(todoId, user.getUserId());
+        return Response.success(TodoResponse.fromDto(todo));
+    }
+
     @PostMapping
     public Response<Void> create(@RequestBody TodoCreateRequest request, Authentication authentication) {
         todoService.create(request.getContents(), request.getDueDate(), authentication.getName());

@@ -26,6 +26,11 @@ public class TodoService {
                 .collect(Collectors.toList());
     }
 
+    public TodoDto getTodo(Integer todoId, Integer userId) {
+        Todo todo = authenticationService.getTodoIfAuthorized(todoId, userId);
+        return TodoDto.fromEntity(todo);
+    }
+
     @Transactional
     public void create(String contents, String dueDate, String username) {
         User user = authenticationService.getUserOrThrowException(username);

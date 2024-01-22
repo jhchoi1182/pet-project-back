@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -15,7 +14,6 @@ import java.time.Instant;
 @Setter
 @Getter
 @SQLDelete(sql = "UPDATE `user` SET removed_at = NOW() WHERE user_id=?")
-@SQLRestriction("removed_at is NULL")
 public class User {
 
     @Id

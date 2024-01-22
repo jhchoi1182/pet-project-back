@@ -74,7 +74,7 @@ spring:
       key-store-password: ${KEYSTORE_PASSWORD}
       keyStoreType: PKCS12
       keyAlias: todokey
-    port: 8443
+    port: 443
 
 todo:
   recommendation:

@@ -16,7 +16,7 @@ spring:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   token:
-    expired-time-ms: 2592000000
+    expired-time-ms: 604800000
 
 logging:
   level:

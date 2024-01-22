@@ -45,7 +45,7 @@ public class UserService {
             throw new TodoExceptionHandler(ErrorCode.INVALID_INFO, "Username should have atleast 2 characters");
         }
         userRepository.findByUsername(username).ifPresent(it -> {
-            throw new TodoExceptionHandler(ErrorCode.DATABASE_ERROR, String.format("%s exists", username));
+            throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
         });
     }
 

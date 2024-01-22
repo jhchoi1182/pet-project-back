@@ -25,6 +25,7 @@ public class Todo {
     private Integer id;
 
     @Size(min = 1, message = "Todo should have atleast 1 characters")
+    @Column(name = "contents", columnDefinition = "TEXT")
     private String contents;
 
     @ManyToOne

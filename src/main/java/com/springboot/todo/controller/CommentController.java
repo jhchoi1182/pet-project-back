@@ -37,7 +37,7 @@ public class CommentController {
         return Response.success();
     }
 
-    @PutMapping("/{todoId}/comment/{commentId}")
+    @PatchMapping("/{todoId}/comment/{commentId}")
     public Response<CommentResponse> update(@PathVariable Integer commentId, @RequestBody CommentRequest request, Authentication authentication) {
         UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
         CommentDto comment = commentService.update(commentId, request.getComment(), user.getUserId());

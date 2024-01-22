@@ -62,7 +62,21 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  security:
+    require-ssl: true
+  servlet:
+    session:
+      cookie:
+        secure: true
+  server:
+    ssl:
+      key-store: classpath:keystore.p12
+      key-store-password: ${KEYSTORE_PASSWORD}
+      keyStoreType: PKCS12
+      keyAlias: todokey
+    port: 8443
+
 todo:
   recommendation:
     base:
-      url: http://52.79.113.40/dir/
+      url: https://jihyeon.store/dir/

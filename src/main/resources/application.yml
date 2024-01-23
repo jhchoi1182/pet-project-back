@@ -62,20 +62,6 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  security:
-    require-ssl: true
-  servlet:
-    session:
-      cookie:
-        secure: true
-  server:
-    ssl:
-      key-store: classpath:keystore.p12
-      key-store-password: ${KEYSTORE_PASSWORD}
-      keyStoreType: PKCS12
-      keyAlias: todokey
-    port: 443
-
 todo:
   recommendation:
     base:

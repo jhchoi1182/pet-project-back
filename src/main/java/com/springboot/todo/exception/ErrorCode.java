@@ -14,6 +14,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User has invalid permission"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User is not found"),
+    USER_REMOVED(HttpStatus.NOT_FOUND, "This user has been removed"),
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "Todo is not found"),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment is not found"),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "Duplicated user name"),

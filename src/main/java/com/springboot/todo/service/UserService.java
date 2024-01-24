@@ -52,8 +52,12 @@ public class UserService {
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new TodoExceptionHandler(ErrorCode.USER_NOT_FOUND));
 
+        if (user.getRemovedAt() != null) {
+            throw new TodoExceptionHandler(ErrorCode.USER_REMOVED);
+        }
+
         if (!encoder.matches(password, user.getPassword())) {
-            throw new TodoExceptionHandler(ErrorCode.INVALID_INFO);
+            throw new TodoExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING);
         }
         return JwtTokenUtils.generateToken(username, user.getPassword(), secretKey, expiredTimeMs);
     }

@@ -3,11 +3,12 @@
 ![image](https://github.com/jhchoi1182/next-todo/assets/116577489/c959ef3f-656d-4d22-b713-34fcf3006a44)
 
 ## 🎉소개
+이 프로젝트는 배운 기술을 실제로 적용하며 점진적으로 기능을 추가해 나가는 것을 목표로 진행되고 있는 개인 프로젝트입니다.
 
-스프링 부트를 이용해 개발한 게시판 API
 <br>
-<br>
-프론트엔드 코드 : https://github.com/jhchoi1182/next-todo
+
+현재 기능 - 스프링 부트를 이용해 개발한 Todo 게시판 API   
+프론트엔드 코드 : https://github.com/jhchoi1182/pet-project-front
 
 <br>
 

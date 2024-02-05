@@ -1,26 +1,26 @@
 version: "3.8"
 services:
   todo-database:
-    container_name: todo-database
+    container_name: pet-project-database
     build:
       dockerfile: Dockerfile
       context: ./database
-    image: jhchoi1182/todo-database
+    image: jhchoi1182/pet-project-database
     environment:
       - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - MYSQL_USER=jhchoi1182
       - MYSQL_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - MYSQL_DATABASE=todos
+      - MYSQL_DATABASE=pet-project
     volumes:
       - ./database/config:/etc/mysql/conf.d
     ports:
       - "3306:3306"
   todo-app:
-    container_name: todo-app
+    container_name: pet-project-app
     build: .
     depends_on:
       - todo-database
-    image: jhchoi1182/todo-app
+    image: jhchoi1182/pet-project-app
     environment:
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}

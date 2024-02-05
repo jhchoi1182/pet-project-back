@@ -19,13 +19,13 @@ jobs:
           chmod 600 ec2_ssh_key.pem
 
       - name: Update server code
-        run: ${{ env.SSH_CMD }} "cd todo-server && git pull origin main"
+        run: ${{ env.SSH_CMD }} "cd pet-project-back && git pull origin main"
 
       - name: Build project
-        run: ${{ env.SSH_CMD }} "cd todo-server && ./gradlew clean build"
+        run: ${{ env.SSH_CMD }} "cd pet-project-back && ./gradlew clean build"
 
       - name: Rebuild and restart Docker containers
-        run: ${{ env.SSH_CMD }} "cd todo-server && docker-compose up --build -d"
+        run: ${{ env.SSH_CMD }} "cd pet-project-back && docker-compose up --build -d"
 
       - name: Prune Docker images
         run: ${{ env.SSH_CMD }} "docker image prune -f"

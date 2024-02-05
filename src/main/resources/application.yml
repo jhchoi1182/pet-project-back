@@ -29,7 +29,7 @@ spring:
     activate:
       on-profile: local
   datasource:
-    url: jdbc:mysql://localhost:3306/todos
+    url: jdbc:mysql://localhost:3306/pet-project
     username: jhchoi1182
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
@@ -51,7 +51,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:mysql://todo-database:3306/todos
+    url: jdbc:mysql://pet-project-database:3306/pet-project
     username: jhchoi1182
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:

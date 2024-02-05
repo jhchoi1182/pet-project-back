@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SSH_CMD: ssh -o StrictHostKeyChecking=no -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }}
+      SSH_CMD: ssh -i ec2_ssh_key.pem ec2-user@${{ secrets.EC2_HOST }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

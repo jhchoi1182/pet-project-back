@@ -30,22 +30,23 @@ public class UserService {
             throw new TodoExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING, "Passwords do not match");
         }
 
-        userRepository.findByUsername(username).ifPresent(it -> {
-                    throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
-        });
+        validateUsername(username);
 
         User user = userRepository.save(User.of(username, encoder.encode(password), UserRole.USER));
         return UserDto.fromEntity(user);
     }
 
-    public void checkUser(String username) {
+    public void validateUsername(String username) {
         if (username.isEmpty() || username.contains(" ")) {
             throw new TodoExceptionHandler(ErrorCode.INVALID_INFO, "Username cannot be empty or contain spaces");
         } else if (username.length() < 2) {
             throw new TodoExceptionHandler(ErrorCode.INVALID_INFO, "Username should have atleast 2 characters");
         }
+
         userRepository.findByUsername(username).ifPresent(it -> {
-            throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
+            if (it.getUsername().equals(username)) {
+                throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
+            }
         });
     }
 

@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/check-username")
     public Response<MessageResponse> checkUser(@RequestBody UserCheckRequest request) {
-        userService.checkUser(request.getUsername());
+        userService.validateUsername(request.getUsername());
         return Response.success(new MessageResponse("The ID is available."));
     }
 

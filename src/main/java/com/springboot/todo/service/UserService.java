@@ -44,9 +44,7 @@ public class UserService {
         }
 
         userRepository.findByUsername(username).ifPresent(it -> {
-            if (it.getUsername().equals(username)) {
-                throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
-            }
+            throw new TodoExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
         });
     }
 

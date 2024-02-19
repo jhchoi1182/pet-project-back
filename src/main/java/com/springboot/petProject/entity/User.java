@@ -21,11 +21,10 @@ public class User {
     @Column(name = "user_id")
     private Integer id;
 
-    @Size(min = 2, message = "ID should have atleast 2 characters")
+    @Size(min = 2, max = 16, message = "ID should have between 2 and 16 characters")
     @Column(unique = true)
     private String username;
 
-    @Size(min = 4, message = "ID should have atleast 4 characters")
     private String password;
 
     @Enumerated(EnumType.STRING)

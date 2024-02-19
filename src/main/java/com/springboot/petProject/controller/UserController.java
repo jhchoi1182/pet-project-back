@@ -9,6 +9,7 @@ import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.UserLoginResponse;
 import com.springboot.petProject.dto.response.UserSignupResponse;
 import com.springboot.petProject.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public Response<UserSignupResponse> createUser(@RequestBody UserSignupRequest request) {
+    public Response<UserSignupResponse> createUser(@Valid @RequestBody UserSignupRequest request) {
         UserDto user = userService.createUser(request.getUsername(), request.getPassword(), request.getPasswordConfirm());
         return Response.success(UserSignupResponse.fromDto(user));
     }
 
     @PostMapping("/check-username")
-    public Response<MessageResponse> checkUser(@RequestBody UserCheckRequest request) {
+    public Response<MessageResponse> checkUser(@Valid @RequestBody UserCheckRequest request) {
         userService.validateUsername(request.getUsername());
         return Response.success(new MessageResponse("The ID is available."));
     }

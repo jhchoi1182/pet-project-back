@@ -27,6 +27,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String requestURI = request.getRequestURI();
+
+        if (requestURI.equals("/user/login") || requestURI.equals("/user/signup")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if(header == null || !header.startsWith("Bearer ")) {
             log.error("Header is null or invalid");

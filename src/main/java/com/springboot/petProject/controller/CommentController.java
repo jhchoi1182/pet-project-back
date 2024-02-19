@@ -7,6 +7,7 @@ import com.springboot.petProject.dto.response.CommentResponse;
 import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +33,13 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}/comment")
-    public Response<Void> create(@PathVariable Integer postId, @RequestBody CommentRequest request, Authentication authentication) {
+    public Response<Void> create(@PathVariable Integer postId, @Valid @RequestBody CommentRequest request, Authentication authentication) {
         commentService.create(postId, request.getComment(), authentication.getName());
         return Response.success();
     }
 
     @PatchMapping("/{postId}/comment/{commentId}")
-    public Response<CommentResponse> update(@PathVariable Integer commentId, @RequestBody CommentRequest request, Authentication authentication) {
+    public Response<CommentResponse> update(@PathVariable Integer commentId, @Valid @RequestBody CommentRequest request, Authentication authentication) {
         UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
         CommentDto comment = commentService.update(commentId, request.getComment(), user.getUserId());
         return Response.success(CommentResponse.fromDto(comment));

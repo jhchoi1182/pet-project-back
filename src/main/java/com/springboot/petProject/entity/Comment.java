@@ -23,7 +23,6 @@ public class Comment {
     @Column(name = "comment_id")
     private Integer id;
 
-    @Size(min = 1, message = "Post should have atleast 1 characters")
     private String comment;
 
     @ManyToOne

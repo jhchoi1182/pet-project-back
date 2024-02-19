@@ -10,5 +10,7 @@ public class UserCheckRequest {
 
     @Size(min = 2, max = 16, message = "ID should have between 2 and 16 characters")
     private String username;
+    @Size(min = 2, max = 16, message = "ID should have between 2 and 16 characters")
+    private String nickname;
 
 }

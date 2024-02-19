@@ -25,6 +25,9 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @Size(min = 2, max = 16, message = "ID should have between 2 and 16 characters")
+    private String nickname;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -48,9 +51,10 @@ public class User {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static User of(String username, String encodedPassword, UserRole role) {
+    public static User of(String username, String nickname, String encodedPassword, UserRole role) {
         User entity = new User();
         entity.setUsername(username);
+        entity.setNickname(nickname);
         entity.setPassword(encodedPassword);
         entity.setRole(role);
         return entity;

@@ -9,6 +9,7 @@ import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.UserLoginResponse;
 import com.springboot.petProject.dto.response.UserSignupResponse;
 import com.springboot.petProject.service.UserService;
+import com.springboot.petProject.service.types.NameType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,14 +26,20 @@ public class UserController {
 
     @PostMapping("/signup")
     public Response<UserSignupResponse> createUser(@Valid @RequestBody UserSignupRequest request) {
-        UserDto user = userService.createUser(request.getUsername(), request.getPassword(), request.getPasswordConfirm());
+        UserDto user = userService.createUser(request.getUsername(), request.getNickname(), request.getPassword(), request.getPasswordConfirm());
         return Response.success(UserSignupResponse.fromDto(user));
     }
 
     @PostMapping("/check-username")
-    public Response<MessageResponse> checkUser(@Valid @RequestBody UserCheckRequest request) {
-        userService.validateUsername(request.getUsername());
+    public Response<MessageResponse> checkUsername(@Valid @RequestBody UserCheckRequest request) {
+        userService.validateName(request.getUsername(), NameType.USERNAME);
         return Response.success(new MessageResponse("The ID is available."));
+    }
+
+    @PostMapping("/check-nickname")
+    public Response<MessageResponse> checkNickname(@Valid @RequestBody UserCheckRequest request) {
+        userService.validateName(request.getNickname(), NameType.NICKNAME);
+        return Response.success(new MessageResponse("The Nickname is available."));
     }
 
     @PostMapping("/login")

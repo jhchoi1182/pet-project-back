@@ -6,12 +6,14 @@ import com.springboot.petProject.entity.UserRole;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.repository.UserRepository;
+import com.springboot.petProject.service.types.NameType;
 import com.springboot.petProject.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -25,27 +27,34 @@ public class UserService {
     private Long expiredTimeMs;
 
     @Transactional
-    public UserDto createUser(String username, String password, String passwordConfirm) {
+    public UserDto createUser(String username, String nickname, String password, String passwordConfirm) {
         if (!password.equals(passwordConfirm)) {
             throw new CustomExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING, "Passwords do not match");
         }
 
-        validateUsername(username);
+        validateName(username, NameType.USERNAME);
+        validateName(nickname, NameType.NICKNAME);
 
-        User user = userRepository.save(User.of(username, encoder.encode(password), UserRole.USER));
+        User user = userRepository.save(User.of(username, nickname, encoder.encode(password), UserRole.USER));
         return UserDto.fromEntity(user);
     }
 
-    public void validateUsername(String username) {
-        if (username.isEmpty() || username.contains(" ")) {
+    public void validateName(String name, NameType nameType) {
+        if (name.isEmpty() || name.contains(" ")) {
             throw new CustomExceptionHandler(ErrorCode.INVALID_INFO, "Username cannot be empty or contain spaces");
-        } else if (username.length() < 2) {
-            throw new CustomExceptionHandler(ErrorCode.INVALID_INFO, "Username should have atleast 2 characters");
         }
 
-        userRepository.findByUsername(username).ifPresent(it -> {
-            throw new CustomExceptionHandler(ErrorCode.DUPLICATED_USER_NAME, String.format("%s exists", username));
-        });
+        if (nameType.equals(NameType.USERNAME)) {
+            userRepository.findByUsername(name).ifPresent(it -> {
+                throw new CustomExceptionHandler(ErrorCode.DUPLICATED_NAME, String.format("%s exists", name));
+            });
+        } else if (nameType.equals(NameType.NICKNAME)) {
+            userRepository.findByNickname(name).ifPresent(it -> {
+                throw new CustomExceptionHandler(ErrorCode.DUPLICATED_NAME, String.format("%s exists", name));
+            });
+        } else {
+            throw new CustomExceptionHandler(ErrorCode.INVALID_TYPE_USAGE, "Invalid name type");
+        }
     }
 
     public String login(String username, String password) {
@@ -53,6 +62,17 @@ public class UserService {
 
         if (user.getRemovedAt() != null) {
             throw new CustomExceptionHandler(ErrorCode.USER_REMOVED);
+        }
+
+        if (user.getNickname() == null) {
+            String newNickname = username;
+            int count = 0;
+            while (userRepository.findByNickname(username).isPresent()) {
+                newNickname = username + count;
+                count++;
+            }
+            user.setNickname(newNickname);
+            userRepository.save(user);
         }
 
         if (!encoder.matches(password, user.getPassword())) {
@@ -63,7 +83,7 @@ public class UserService {
 
     public String loginAsGuest() {
         User guestUser = userRepository.findByUsername("guest")
-                .orElseGet(() -> userRepository.save(User.of("guest", encoder.encode("321321"), UserRole.GUEST)));
+                .orElseGet(() -> userRepository.save(User.of("guest", "게스트", encoder.encode("321321"), UserRole.GUEST)));
 
         return JwtTokenUtils.generateToken(guestUser.getUsername(), guestUser.getPassword(), secretKey, expiredTimeMs);
     }

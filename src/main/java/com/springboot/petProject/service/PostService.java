@@ -38,7 +38,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto updateContents(Integer postId, String title, String contents, Integer userId) {
+    public PostDto update(Integer postId, String title, String contents, Integer userId) {
         Post post = authenticationService.getPostIfAuthorized(postId, userId);
 
         post.setTitle(title);

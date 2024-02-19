@@ -12,6 +12,11 @@ spring:
   config:
     activate:
       on-profile: common
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
   datasource:
     url: jdbc:mysql://localhost:3306/pet-project
     username: jhchoi1182
@@ -32,7 +37,7 @@ jwt:
 logging:
   level:
     org:
-      springframework: info
+      springframework: debug
 
 ---
 spring:

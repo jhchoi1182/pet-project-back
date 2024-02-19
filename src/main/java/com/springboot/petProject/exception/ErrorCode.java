@@ -11,7 +11,7 @@ public enum ErrorCode {
     PASSWORDS_NOT_MATCHING(HttpStatus.BAD_REQUEST, "Passwords do not match"),
     INVALID_REQUEST_VALUE(HttpStatus.BAD_REQUEST, "Invalid request value"),
     INVALID_INFO(HttpStatus.BAD_REQUEST, "Invalid user information"),
-    INVALID_TYPE_USAGE(HttpStatus.BAD_REQUEST, "Invalid type used in service logic"),
+    PROFANITY_INCLUDED(HttpStatus.BAD_REQUEST, "Value contains profanity"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User has invalid permission"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User is not found"),
@@ -19,6 +19,7 @@ public enum ErrorCode {
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "Todo is not found"),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment is not found"),
     DUPLICATED_NAME(HttpStatus.CONFLICT, "Duplicated name"),
+    SERVER_ERROR(HttpStatus.CONFLICT, "Server error occurs"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     CLASS_CAST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Casting error occurred")
     ;

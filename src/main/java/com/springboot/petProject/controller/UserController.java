@@ -8,7 +8,7 @@ import com.springboot.petProject.dto.response.MessageResponse;
 import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.UserLoginResponse;
 import com.springboot.petProject.dto.response.UserSignupResponse;
-import com.springboot.petProject.service.UserService;
+import com.springboot.petProject.service.user.UserService;
 import com.springboot.petProject.service.types.NameType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,13 @@ public class UserController {
 
     @PostMapping("/check-username")
     public Response<MessageResponse> checkUsername(@Valid @RequestBody UserCheckRequest request) {
-        userService.validateName(request.getUsername(), NameType.USERNAME);
+        userService.checkName(request.getUsername(), NameType.USERNAME);
         return Response.success(new MessageResponse("The ID is available."));
     }
 
     @PostMapping("/check-nickname")
     public Response<MessageResponse> checkNickname(@Valid @RequestBody UserCheckRequest request) {
-        userService.validateName(request.getNickname(), NameType.NICKNAME);
+        userService.checkName(request.getNickname(), NameType.NICKNAME);
         return Response.success(new MessageResponse("The Nickname is available."));
     }
 

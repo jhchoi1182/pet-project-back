@@ -20,8 +20,8 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final AuthenticationService authenticationService;
 
-    public List<PostDto> getPosts(Integer userId) {
-        return postRepository.findAllByUserId(userId).stream()
+    public List<PostDto> getPosts() {
+        return postRepository.findAll().stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());
     }

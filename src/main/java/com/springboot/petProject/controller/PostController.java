@@ -25,9 +25,8 @@ public class PostController {
     private final AuthenticationService authenticationService;
 
     @GetMapping
-    public Response<List<PostResponse>> getPosts(Authentication authentication) {
-        UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
-        List<PostDto> posts = postService.getPosts(user.getUserId());
+    public Response<List<PostResponse>> getPosts() {
+        List<PostDto> posts = postService.getPosts();
         return Response.success(posts.stream()
                 .map(PostResponse::fromDto)
                 .collect(Collectors.toList()));

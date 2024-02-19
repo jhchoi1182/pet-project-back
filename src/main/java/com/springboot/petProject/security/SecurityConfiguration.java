@@ -49,9 +49,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(new JwtTokenFilter(userRepository, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling((exceptionHandling) ->
-                        exceptionHandling
-                                .accessDeniedPage("/errors/access-denied")
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+                        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         return http.build();
     }

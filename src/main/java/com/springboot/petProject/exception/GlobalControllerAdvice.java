@@ -19,7 +19,13 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException e) {
         log.error("error occurs {}", e.toString());
+        String errorMessage = getJoinedErrorMessage(e);
+        return ResponseEntity
+                .status(e.getStatusCode())
+                .body(Response.error(errorMessage));
+    }
 
+    private String getJoinedErrorMessage(MethodArgumentNotValidException e) {
         List<String> errorMessages = e.getBindingResult().getAllErrors().stream()
                 .map(objectError -> {
                     if (objectError instanceof FieldError) {
@@ -30,15 +36,11 @@ public class GlobalControllerAdvice {
                 })
                 .collect(Collectors.toList());
 
-        String errorMessage = String.join(", ", errorMessages);
-
-        return ResponseEntity
-                .status(e.getStatusCode())
-                .body(Response.error(errorMessage));
+        return String.join(", ", errorMessages);
     }
 
     @ExceptionHandler(CustomExceptionHandler.class)
-    public ResponseEntity<?> applicationHandler(CustomExceptionHandler e) {
+    public ResponseEntity<?> handleCustomException(CustomExceptionHandler e) {
         log.error("error occurs {}", e.toString());
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
@@ -46,7 +48,7 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> applicationHandler(RuntimeException e) {
+    public ResponseEntity<?> handleRuntimeException(RuntimeException e) {
         log.error("error occurs {}", e.toString());
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

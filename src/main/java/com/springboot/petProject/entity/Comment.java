@@ -23,7 +23,7 @@ public class Comment {
     @Column(name = "comment_id")
     private Integer id;
 
-    @Size(min = 1, message = "Todo should have atleast 1 characters")
+    @Size(min = 1, message = "Post should have atleast 1 characters")
     private String comment;
 
     @ManyToOne
@@ -31,8 +31,8 @@ public class Comment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "todo_id")
-    private Todo todo;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;
@@ -52,10 +52,10 @@ public class Comment {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Comment of(User user, Todo todo, String comment) {
+    public static Comment of(User user, Post post, String comment) {
         Comment entity = new Comment();
         entity.setUser(user);
-        entity.setTodo(todo);
+        entity.setPost(post);
         entity.setComment(comment);
         return entity;
     }

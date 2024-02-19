@@ -12,19 +12,19 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "`todo`")
+@Table(name = "`post`")
 @Setter
 @Getter
-@SQLDelete(sql = "UPDATE `todo` SET removed_at = NOW() WHERE todo_id=?")
+@SQLDelete(sql = "UPDATE `post` SET removed_at = NOW() WHERE post_id=?")
 @SQLRestriction("removed_at is NULL")
-public class Todo {
+public class Post {
 
     @Id
     @GeneratedValue
-    @Column(name = "todo_id")
+    @Column(name = "post_id")
     private Integer id;
 
-    @Size(min = 1, message = "Todo should have atleast 1 characters")
+    @Size(min = 1, message = "Post should have atleast 1 characters")
     @Column(name = "contents", columnDefinition = "TEXT")
     private String contents;
 
@@ -33,7 +33,7 @@ public class Todo {
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "todo_id")
+    @JoinColumn(name = "post_id")
     private List<Comment> comments;
 
     private Boolean isDone = false;
@@ -59,8 +59,8 @@ public class Todo {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Todo of(String contents, String dueDate, User user) {
-        Todo entity = new Todo();
+    public static Post of(String contents, String dueDate, User user) {
+        Post entity = new Post();
         entity.setContents(contents);
         entity.setDueDate(dueDate);
         entity.setUser(user);

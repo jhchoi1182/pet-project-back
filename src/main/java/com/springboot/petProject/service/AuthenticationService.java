@@ -1,11 +1,11 @@
 package com.springboot.petProject.service;
 
 import com.springboot.petProject.dto.UserDto;
-import com.springboot.petProject.entity.Todo;
+import com.springboot.petProject.entity.Post;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.exception.CustomExceptionHandler;
-import com.springboot.petProject.repository.TodoRepository;
+import com.springboot.petProject.repository.PostRepository;
 import com.springboot.petProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,7 @@ import java.util.Objects;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final TodoRepository todoRepository;
+    private final PostRepository postRepository;
 
     public UserDto getAuthenticationPrincipal(Authentication authentication) {
         try {
@@ -33,24 +33,24 @@ public class AuthenticationService {
                 new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not found", username)));
     }
 
-    public Todo getTodoOrThrowException(Integer todoId) {
-        return todoRepository.findById(todoId).orElseThrow(() ->
-                new CustomExceptionHandler(ErrorCode.TODO_NOT_FOUND, String.format("%s is not found", todoId)));
+    public Post getPostOrThrowException(Integer postId) {
+        return postRepository.findById(postId).orElseThrow(() ->
+                new CustomExceptionHandler(ErrorCode.POST_NOT_FOUND, String.format("%s is not found", postId)));
     }
 
-    public void validatePermission(Todo todo, User user) {
-        if(todo.getUser() != user) {
-            throw new CustomExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with todo %d", user.getUsername(), todo.getId()));
+    public void validatePermission(Post post, User user) {
+        if(post.getUser() != user) {
+            throw new CustomExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with post %d", user.getUsername(), post.getId()));
         }
     }
 
-    public Todo getTodoIfAuthorized(Integer todoId, Integer userId) {
-        Todo todo = getTodoOrThrowException(todoId);
+    public Post getPostIfAuthorized(Integer postId, Integer userId) {
+        Post post = getPostOrThrowException(postId);
 
-        if(!Objects.equals(todo.getUser().getId(), userId)) {
-            throw new CustomExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with todo %d", userId, todoId));
+        if(!Objects.equals(post.getUser().getId(), userId)) {
+            throw new CustomExceptionHandler(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with post %d", userId, postId));
         }
-        return todo;
+        return post;
     }
 
 

@@ -33,6 +33,7 @@ public class ValidateName {
         }
     }
 
+    // nickname Column 추가에 따른 예외처리
     public void assignUniqueNicknameIfAbsent(String username, User user) {
         if (user.getNickname() == null) {
             String newNickname = username;

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TodoCreateRequest {
+public class PostCreateRequest {
 
     private String contents;
     private String dueDate;

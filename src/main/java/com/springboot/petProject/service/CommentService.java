@@ -2,7 +2,7 @@ package com.springboot.petProject.service;
 
 import com.springboot.petProject.dto.CommentDto;
 import com.springboot.petProject.entity.Comment;
-import com.springboot.petProject.entity.Todo;
+import com.springboot.petProject.entity.Post;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.exception.CustomExceptionHandler;
@@ -22,20 +22,20 @@ public class CommentService {
     private final AuthenticationService authenticationService;
     private final CommentRepository commentRepository;
 
-    public List<CommentDto> getComments(Integer todoId, Integer userId) {
-        Todo todo = authenticationService.getTodoIfAuthorized(todoId, userId);
-        return commentRepository.findAllByTodoId(todo.getId()).stream()
+    public List<CommentDto> getComments(Integer postId, Integer userId) {
+        Post post = authenticationService.getPostIfAuthorized(postId, userId);
+        return commentRepository.findAllByPostId(post.getId()).stream()
                 .map(CommentDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void create(Integer todoId, String comment, String username) {
-        Todo todo = authenticationService.getTodoOrThrowException(todoId);
+    public void create(Integer postId, String comment, String username) {
+        Post post = authenticationService.getPostOrThrowException(postId);
         User user = authenticationService.getUserOrThrowException(username);
-        authenticationService.validatePermission(todo, user);
+        authenticationService.validatePermission(post, user);
 
-        commentRepository.save(Comment.of(user, todo, comment));
+        commentRepository.save(Comment.of(user, post, comment));
 
     }
 

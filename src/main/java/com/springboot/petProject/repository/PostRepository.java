@@ -1,14 +1,14 @@
 package com.springboot.petProject.repository;
 
-import com.springboot.petProject.entity.Todo;
+import com.springboot.petProject.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface TodoRepository extends JpaRepository<Todo, Integer> {
+public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    List<Todo> findAllByUserId(Integer userId);
+    List<Post> findAllByUserId(Integer userId);
 
 }

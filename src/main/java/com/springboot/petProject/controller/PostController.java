@@ -8,6 +8,7 @@ import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.PostResponse;
 import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -40,15 +41,15 @@ public class PostController {
     }
 
     @PostMapping
-    public Response<Void> create(@RequestBody PostCreateRequest request, Authentication authentication) {
-        postService.create(request.getContents(), request.getDueDate(), authentication.getName());
+    public Response<Void> create(@Valid @RequestBody PostCreateRequest request, Authentication authentication) {
+        postService.create(request.getTitle(), request.getContents(), authentication.getName());
         return Response.success();
     }
 
     @PatchMapping("/{postId}")
-    public Response<PostResponse> updateContents(@PathVariable Integer postId, @RequestBody PostUpdateRequest request, Authentication authentication) {
+    public Response<PostResponse> updateContents(@Valid @PathVariable Integer postId, @RequestBody PostUpdateRequest request, Authentication authentication) {
         UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
-        PostDto post = postService.updateContents(postId, request.getContents(), request.getDueDate(), user.getUserId());
+        PostDto post = postService.updateContents(postId, request.getTitle(), request.getContents(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

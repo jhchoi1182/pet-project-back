@@ -24,7 +24,8 @@ public class Post {
     @Column(name = "post_id")
     private Integer id;
 
-    @Size(min = 1, message = "Post should have atleast 1 characters")
+    private String title;
+
     @Column(name = "contents", columnDefinition = "TEXT")
     private String contents;
 
@@ -35,11 +36,6 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
-
-    private Boolean isDone = false;
-
-    @Column(name = "due_date")
-    private String dueDate;
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;
@@ -59,10 +55,10 @@ public class Post {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(String contents, String dueDate, User user) {
+    public static Post of(String title, String contents, User user) {
         Post entity = new Post();
+        entity.setTitle(title);
         entity.setContents(contents);
-        entity.setDueDate(dueDate);
         entity.setUser(user);
         return entity;
     }

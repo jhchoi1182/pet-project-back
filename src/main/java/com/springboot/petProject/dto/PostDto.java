@@ -11,9 +11,8 @@ import java.sql.Timestamp;
 public class PostDto {
 
     private Integer postId;
+    private String title;
     private String contents;
-    private Boolean isDone;
-    private String dueDate;
     private UserDto user;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
@@ -21,9 +20,8 @@ public class PostDto {
     public static PostDto fromEntity(Post entity) {
         return new PostDto(
                 entity.getId(),
+                entity.getTitle(),
                 entity.getContents(),
-                entity.getIsDone(),
-                entity.getDueDate(),
                 UserDto.fromEntity(entity.getUser()),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt()

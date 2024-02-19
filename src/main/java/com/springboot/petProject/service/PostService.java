@@ -32,17 +32,17 @@ public class PostService {
     }
 
     @Transactional
-    public void create(String contents, String dueDate, String username) {
+    public void create(String title, String contents, String username) {
         User user = authenticationService.getUserOrThrowException(username);
-        postRepository.save(Post.of(contents, dueDate, user));
+        postRepository.save(Post.of(title, contents, user));
     }
 
     @Transactional
-    public PostDto updateContents(Integer postId, String contents, String dueDate, Integer userId) {
+    public PostDto updateContents(Integer postId, String title, String contents, Integer userId) {
         Post post = authenticationService.getPostIfAuthorized(postId, userId);
 
+        post.setTitle(title);
         post.setContents(contents);
-        post.setDueDate(dueDate);
 
         return PostDto.fromEntity(postRepository.save(post));
     }

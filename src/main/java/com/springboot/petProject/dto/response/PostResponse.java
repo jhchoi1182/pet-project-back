@@ -9,16 +9,14 @@ import lombok.Getter;
 public class PostResponse {
 
     private Integer postId;
+    private String title;
     private String contents;
-    private Boolean isDone;
-    private String dueDate;
 
     public static PostResponse fromDto(PostDto post) {
         return new PostResponse(
                 post.getPostId(),
-                post.getContents(),
-                post.getIsDone(),
-                post.getDueDate()
+                post.getTitle(),
+                post.getContents()
         );
     }
 

@@ -36,9 +36,9 @@ public class SecurityConfiguration {
                             ).permitAll()
                             .requestMatchers(
                                     HttpMethod.POST,
-                                    "/user/check-username",
-                                    "/user/signup",
-                                    "/user/login"
+                                    "/api/user/check-username",
+                                    "/api/user/signup",
+                                    "/api/user/login"
                             ).permitAll()
                             .anyRequest()
                             .authenticated())

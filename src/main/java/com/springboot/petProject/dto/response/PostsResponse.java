@@ -7,20 +7,22 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class PostResponse {
+public class PostsResponse {
 
     private Integer postId;
     private String title;
     private String contents;
     private String nickname;
+    private int commentsCount;
     private String formattedRegisteredAt;
 
-    public static PostResponse fromDto(PostDto post) {
-        return new PostResponse(
+    public static PostsResponse fromDto(PostDto post) {
+        return new PostsResponse(
                 post.getPostId(),
                 post.getTitle(),
                 post.getContents(),
                 post.getNickname(),
+                post.getCommentsCount(),
                 DateUtil.formatTimestamp(post.getRegisteredAt())
         );
     }

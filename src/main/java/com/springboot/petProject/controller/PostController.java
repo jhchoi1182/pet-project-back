@@ -4,13 +4,13 @@ import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.dto.request.PostCreateRequest;
 import com.springboot.petProject.dto.request.PostUpdateRequest;
-import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.PostResponse;
+import com.springboot.petProject.dto.response.PostsResponse;
+import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +20,16 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
-@Slf4j
 public class PostController {
 
     private final PostService postService;
     private final AuthenticationService authenticationService;
 
     @GetMapping
-    public Response<List<PostResponse>> getPosts() {
+    public Response<List<PostsResponse>> getPosts() {
         List<PostDto> posts = postService.getPosts();
         return Response.success(posts.stream()
-                .map(PostResponse::fromDto)
+                .map(PostsResponse::fromDto)
                 .collect(Collectors.toList()));
     }
 
@@ -43,7 +42,6 @@ public class PostController {
 
     @PostMapping
     public Response<Void> create(@Valid @RequestBody PostCreateRequest request, Authentication authentication) {
-        log.info(request.toString());
         postService.create(request.getTitle(), request.getContents(), authentication.getName());
         return Response.success();
     }

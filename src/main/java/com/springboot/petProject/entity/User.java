@@ -1,7 +1,6 @@
 package com.springboot.petProject.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -21,11 +20,9 @@ public class User {
     @Column(name = "user_id")
     private Integer id;
 
-    @Size(min = 2, max = 16, message = "ID should have between 2 and 16 characters")
     @Column(unique = true)
     private String username;
 
-    @Size(min = 2, max = 16, message = "ID should have between 2 and 16 characters")
     private String nickname;
 
     private String password;

@@ -14,6 +14,8 @@ public class PostDto {
     private String title;
     private String contents;
     private UserDto user;
+    private String nickname;
+    private int commentsCount;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
 
@@ -23,6 +25,8 @@ public class PostDto {
                 entity.getTitle(),
                 entity.getContents(),
                 UserDto.fromEntity(entity.getUser()),
+                entity.getUser().getNickname(),
+                entity.getComments().size(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt()
         );

@@ -1,6 +1,7 @@
 package com.springboot.petProject.dto.response.comment;
 
 import com.springboot.petProject.dto.CommentDto;
+import com.springboot.petProject.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,16 +13,15 @@ public class CommentResponse {
 
     private Integer commentId;
     private String comment;
-    private String registeredAt;
+    private String nickname;
+    private String formattedRegisteredAt;
 
     public static CommentResponse fromDto(CommentDto comment) {
-        String formattedDate =
-                new SimpleDateFormat("yyyy-MM-dd")
-                        .format(comment.getRegisteredAt());
         return new CommentResponse(
                 comment.getCommentId(),
                 comment.getComment(),
-                formattedDate
+                comment.getNickname(),
+                DateUtil.formatTimestamp(comment.getRegisteredAt())
         );
     }
 

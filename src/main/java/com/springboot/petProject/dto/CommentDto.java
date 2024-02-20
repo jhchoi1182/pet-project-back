@@ -13,7 +13,7 @@ public class CommentDto {
     private Integer commentId;
     private String comment;
     private Integer postId;
-    private String username;
+    private String nickname;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
 
@@ -22,7 +22,7 @@ public class CommentDto {
                 entity.getId(),
                 entity.getComment(),
                 entity.getPost().getId(),
-                entity.getUser().getUsername(),
+                entity.getUser().getNickname(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt()
         );

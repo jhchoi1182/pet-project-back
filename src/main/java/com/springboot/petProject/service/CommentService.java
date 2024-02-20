@@ -31,21 +31,28 @@ public class CommentService {
 
     @Transactional
     public void create(Integer postId, String comment, String username) {
+        validateCommentNotNull(comment);
         Post post = authenticationService.getPostOrThrowException(postId);
         User user = authenticationService.getUserOrThrowException(username);
         authenticationService.validatePermission(post, user);
 
         commentRepository.save(Comment.of(user, post, comment));
-
     }
 
     @Transactional
     public CommentDto update(Integer commentId, String comment, Integer userId) {
+        validateCommentNotNull(comment);
         Comment commentEntity = getCommentIfAuthorized(commentId, userId);
 
         commentEntity.setComment(comment);
 
         return CommentDto.fromEntity(commentRepository.save(commentEntity));
+    }
+
+    private void validateCommentNotNull(String comment) {
+        if (comment == null) {
+            throw new CustomExceptionHandler(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
+        }
     }
 
     @Transactional

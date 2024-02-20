@@ -10,6 +10,7 @@ import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/post")
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -41,6 +43,7 @@ public class PostController {
 
     @PostMapping
     public Response<Void> create(@Valid @RequestBody PostCreateRequest request, Authentication authentication) {
+        log.info(request.toString());
         postService.create(request.getTitle(), request.getContents(), authentication.getName());
         return Response.success();
     }

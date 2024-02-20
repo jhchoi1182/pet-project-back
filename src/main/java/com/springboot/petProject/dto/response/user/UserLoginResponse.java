@@ -1,4 +1,4 @@
-package com.springboot.petProject.dto.response;
+package com.springboot.petProject.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

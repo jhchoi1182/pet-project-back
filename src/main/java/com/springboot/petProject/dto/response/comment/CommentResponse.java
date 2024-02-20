@@ -1,4 +1,4 @@
-package com.springboot.petProject.dto.response;
+package com.springboot.petProject.dto.response.comment;
 
 import com.springboot.petProject.dto.CommentDto;
 import lombok.AllArgsConstructor;

@@ -2,10 +2,10 @@ package com.springboot.petProject.controller;
 
 import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.dto.UserDto;
-import com.springboot.petProject.dto.request.PostCreateRequest;
-import com.springboot.petProject.dto.request.PostUpdateRequest;
-import com.springboot.petProject.dto.response.PostResponse;
-import com.springboot.petProject.dto.response.PostsResponse;
+import com.springboot.petProject.dto.request.post.PostCreateRequest;
+import com.springboot.petProject.dto.request.post.PostUpdateRequest;
+import com.springboot.petProject.dto.response.post.PostResponse;
+import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.PostService;

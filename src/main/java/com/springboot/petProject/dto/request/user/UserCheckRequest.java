@@ -1,4 +1,4 @@
-package com.springboot.petProject.dto.request;
+package com.springboot.petProject.dto.request.user;
 
 import jakarta.validation.constraints.Size;
 import lombok.Data;

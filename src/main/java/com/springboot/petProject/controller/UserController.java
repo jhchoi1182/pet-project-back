@@ -1,13 +1,13 @@
 package com.springboot.petProject.controller;
 
 import com.springboot.petProject.dto.UserDto;
-import com.springboot.petProject.dto.request.UserCheckRequest;
-import com.springboot.petProject.dto.request.UserLoginRequest;
-import com.springboot.petProject.dto.request.UserSignupRequest;
+import com.springboot.petProject.dto.request.user.UserCheckRequest;
+import com.springboot.petProject.dto.request.user.UserLoginRequest;
+import com.springboot.petProject.dto.request.user.UserSignupRequest;
 import com.springboot.petProject.dto.response.MessageResponse;
 import com.springboot.petProject.dto.response.Response;
-import com.springboot.petProject.dto.response.UserLoginResponse;
-import com.springboot.petProject.dto.response.UserSignupResponse;
+import com.springboot.petProject.dto.response.user.UserLoginResponse;
+import com.springboot.petProject.dto.response.user.UserSignupResponse;
 import com.springboot.petProject.service.user.UserService;
 import com.springboot.petProject.service.types.NameType;
 import jakarta.validation.Valid;

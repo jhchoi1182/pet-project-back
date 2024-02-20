@@ -2,8 +2,8 @@ package com.springboot.petProject.controller;
 
 import com.springboot.petProject.dto.CommentDto;
 import com.springboot.petProject.dto.UserDto;
-import com.springboot.petProject.dto.request.CommentRequest;
-import com.springboot.petProject.dto.response.CommentResponse;
+import com.springboot.petProject.dto.request.comment.CommentRequest;
+import com.springboot.petProject.dto.response.comment.CommentResponse;
 import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.CommentService;

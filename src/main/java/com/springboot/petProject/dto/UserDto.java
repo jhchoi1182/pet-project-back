@@ -19,6 +19,7 @@ public class UserDto implements UserDetails {
     private Integer userId;
     private String username;
     private String nickname;
+    private String email;
     private String password;
     private UserRole role;
     private Timestamp registeredAt;
@@ -30,6 +31,7 @@ public class UserDto implements UserDetails {
                 entity.getId(),
                 entity.getUsername(),
                 entity.getNickname(),
+                entity.getEmail(),
                 entity.getPassword(),
                 entity.getRole(),
                 entity.getRegisteredAt(),

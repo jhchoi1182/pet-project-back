@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public Response<UserSignupResponse> createUser(@Valid @RequestBody UserSignupRequest request) {
-        UserDto user = userService.createUser(request.getUsername(), request.getNickname(), request.getPassword(), request.getPasswordConfirm());
+        UserDto user = userService.createUser(request.getUsername(), request.getNickname(), request.getEmail(), request.getPassword(), request.getPasswordConfirm());
         return Response.success(UserSignupResponse.fromDto(user));
     }
 

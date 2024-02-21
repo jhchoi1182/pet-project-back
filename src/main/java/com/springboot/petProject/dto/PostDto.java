@@ -17,7 +17,6 @@ public class PostDto {
     private String nickname;
     private int commentsCount;
     private Timestamp registeredAt;
-    private Timestamp updatedAt;
 
     public static PostDto fromEntity(Post entity) {
         return new PostDto(
@@ -27,8 +26,7 @@ public class PostDto {
                 UserDto.fromEntity(entity.getUser()),
                 entity.getUser().getNickname(),
                 entity.getComments().size(),
-                entity.getRegisteredAt(),
-                entity.getUpdatedAt()
+                entity.getRegisteredAt()
         );
     }
 

@@ -35,9 +35,15 @@ public class SecurityConfiguration {
                                     "/webjars/**"
                             ).permitAll()
                             .requestMatchers(
+                                    HttpMethod.GET,
+                                    "/api/post",
+                                    "/api/post/**"
+                            ).permitAll()
+                            .requestMatchers(
                                     HttpMethod.POST,
-                                    "/api/user/check-username",
                                     "/api/user/signup",
+                                    "/api/user/check-username",
+                                    "/api/user/check-nickname",
                                     "/api/user/login"
                             ).permitAll()
                             .anyRequest()

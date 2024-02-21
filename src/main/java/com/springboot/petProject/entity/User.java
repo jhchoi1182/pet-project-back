@@ -23,7 +23,11 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
     private String nickname;
+
+    @Column(unique = true)
+    private String email;
 
     private String password;
 
@@ -48,10 +52,11 @@ public class User {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static User of(String username, String nickname, String encodedPassword, UserRole role) {
+    public static User of(String username, String nickname, String email, String encodedPassword, UserRole role) {
         User entity = new User();
         entity.setUsername(username);
         entity.setNickname(nickname);
+        entity.setEmail(email);
         entity.setPassword(encodedPassword);
         entity.setRole(role);
         return entity;

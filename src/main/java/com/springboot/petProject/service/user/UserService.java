@@ -27,7 +27,7 @@ public class UserService {
     private Long expiredTimeMs;
 
     @Transactional
-    public UserDto createUser(String username, String nickname, String password, String passwordConfirm) {
+    public UserDto createUser(String username, String nickname, String email, String password, String passwordConfirm) {
         if (!password.equals(passwordConfirm)) {
             throw new CustomExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING, "Passwords do not match");
         }
@@ -35,7 +35,7 @@ public class UserService {
         validateName.validateName(username, NameType.USERNAME);
         validateName.validateName(nickname, NameType.NICKNAME);
 
-        User user = userRepository.save(User.of(username, nickname, encoder.encode(password), UserRole.USER));
+        User user = userRepository.save(User.of(username, nickname, email, encoder.encode(password), UserRole.USER));
         return UserDto.fromEntity(user);
     }
 
@@ -58,10 +58,9 @@ public class UserService {
         return JwtTokenUtils.generateToken(username, user.getPassword(), secretKey, expiredTimeMs);
     }
 
-
     public String loginAsGuest() {
         User guestUser = userRepository.findByUsername("guest")
-                .orElseGet(() -> userRepository.save(User.of("guest", "게스트", encoder.encode("321321"), UserRole.GUEST)));
+                .orElseGet(() -> userRepository.save(User.of("guest", "게스트", "test@test.com", encoder.encode("321321"), UserRole.GUEST)));
 
         return JwtTokenUtils.generateToken(guestUser.getUsername(), guestUser.getPassword(), secretKey, expiredTimeMs);
     }

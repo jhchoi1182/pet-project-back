@@ -11,16 +11,14 @@ public class PostsResponse {
 
     private Integer postId;
     private String title;
-    private String contents;
     private String nickname;
     private int commentsCount;
-    private String formattedRegisteredAt;
+    private String registeredAt;
 
     public static PostsResponse fromDto(PostDto post) {
         return new PostsResponse(
                 post.getPostId(),
                 post.getTitle(),
-                post.getContents(),
                 post.getNickname(),
                 post.getCommentsCount(),
                 DateUtil.formatTimestamp(post.getRegisteredAt())

@@ -13,7 +13,7 @@ public class PostResponse {
     private String title;
     private String contents;
     private String nickname;
-    private String formattedRegisteredAt;
+    private String registeredAt;
 
     public static PostResponse fromDto(PostDto post) {
         return new PostResponse(

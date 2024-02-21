@@ -9,10 +9,9 @@ import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.user.UserLoginResponse;
 import com.springboot.petProject.dto.response.user.UserSignupResponse;
 import com.springboot.petProject.service.user.UserService;
-import com.springboot.petProject.service.types.NameType;
+import com.springboot.petProject.types.NameType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +32,7 @@ public class UserController {
     @PostMapping("/check-username")
     public Response<MessageResponse> checkUsername(@Valid @RequestBody UserCheckRequest request) {
         userService.checkName(request.getUsername(), NameType.USERNAME);
-        return Response.success(new MessageResponse("The ID is available."));
+        return Response.success(new MessageResponse("The Username is available."));
     }
 
     @PostMapping("/check-nickname")
@@ -43,19 +42,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response<UserLoginResponse>> login(@RequestParam(value = "type", required = true) String type, @RequestBody(required = false) UserLoginRequest request) {
-        String token;
-        if ("guest".equals(type)) {
-            token = userService.loginAsGuest();
-            return ResponseEntity.ok(Response.success(new UserLoginResponse(token)));
-        } else if ("user".equals(type)) {
-            if (request == null || request.getUsername() == null || request.getPassword() == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            token = userService.login(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok(Response.success(new UserLoginResponse(token)));
-        }
-        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Response<UserLoginResponse>> login(@RequestBody UserLoginRequest request) {
+        String token = userService.login(request.getUsername(), request.getPassword());
+        return ResponseEntity.ok(Response.success(new UserLoginResponse(token)));
     }
 
     @DeleteMapping("/delete")

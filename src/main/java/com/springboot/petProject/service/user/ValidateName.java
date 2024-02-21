@@ -1,10 +1,9 @@
 package com.springboot.petProject.service.user;
 
-import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.UserRepository;
-import com.springboot.petProject.service.types.NameType;
+import com.springboot.petProject.types.NameType;
 import com.vane.badwordfiltering.BadWordFiltering;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,20 +29,6 @@ public class ValidateName {
                 break;
             default:
                 throw new CustomExceptionHandler(ErrorCode.SERVER_ERROR, "Invalid name type");
-        }
-    }
-
-    // nickname Column 추가에 따른 예외처리
-    public void assignUniqueNicknameIfAbsent(String username, User user) {
-        if (user.getNickname() == null) {
-            String newNickname = username;
-            int count = 0;
-            while (userRepository.findByNickname(username).isPresent()) {
-                newNickname = username + count;
-                count++;
-            }
-            user.setNickname(newNickname);
-            userRepository.save(user);
         }
     }
 

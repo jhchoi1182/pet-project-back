@@ -6,7 +6,7 @@ import com.springboot.petProject.entity.UserRole;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.UserRepository;
-import com.springboot.petProject.service.types.NameType;
+import com.springboot.petProject.types.NameType;
 import com.springboot.petProject.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,18 +44,22 @@ public class UserService {
     }
 
     public String login(String username, String password) {
+        validateUsernameAndPasswordNotNull(username, password);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND));
-
         if (user.getRemovedAt() != null) {
             throw new CustomExceptionHandler(ErrorCode.USER_REMOVED);
         }
-
-        validateName.assignUniqueNicknameIfAbsent(username, user);
 
         if (!encoder.matches(password, user.getPassword())) {
             throw new CustomExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING);
         }
         return JwtTokenUtils.generateToken(username, user.getPassword(), secretKey, expiredTimeMs);
+    }
+
+    private void validateUsernameAndPasswordNotNull(String username, String password) {
+        if (username == null || password == null) {
+            throw new CustomExceptionHandler(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
+        }
     }
 
     public String loginAsGuest() {

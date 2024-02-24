@@ -6,6 +6,7 @@ import com.springboot.petProject.dto.request.user.UserLoginRequest;
 import com.springboot.petProject.dto.request.user.UserSignupRequest;
 import com.springboot.petProject.dto.response.MessageResponse;
 import com.springboot.petProject.dto.response.Response;
+import com.springboot.petProject.dto.response.user.UserInfoResponse;
 import com.springboot.petProject.dto.response.user.UserLoginResponse;
 import com.springboot.petProject.dto.response.user.UserSignupResponse;
 import com.springboot.petProject.service.user.UserService;
@@ -29,6 +30,11 @@ public class UserController {
         return Response.success(UserSignupResponse.fromDto(user));
     }
 
+    @GetMapping("")
+    public Response<UserInfoResponse> getUserInfo(Authentication authentication) {
+        return Response.success(new UserInfoResponse(authentication.getName()));
+    }
+
     @PostMapping("/check-username")
     public Response<MessageResponse> checkUsername(@Valid @RequestBody UserCheckRequest request) {
         userService.checkName(request.getUsername(), NameType.USERNAME);
@@ -44,7 +50,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Response<UserLoginResponse>> login(@RequestBody UserLoginRequest request) {
         String token = userService.login(request.getUsername(), request.getPassword());
-        return ResponseEntity.ok(Response.success(new UserLoginResponse(token)));
+        return ResponseEntity.ok(Response.success(new UserLoginResponse(token, request.getUsername())));
     }
 
     @DeleteMapping("/delete")

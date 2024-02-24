@@ -34,9 +34,8 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public Response<PostResponse> getPost(@PathVariable Integer postId, Authentication authentication) {
-        UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
-        PostDto post = postService.getPost(postId, user.getUserId());
+    public Response<PostResponse> getPost(@PathVariable Integer postId) {
+        PostDto post = postService.getPost(postId);
         return Response.success(PostResponse.fromDto(post));
     }
 

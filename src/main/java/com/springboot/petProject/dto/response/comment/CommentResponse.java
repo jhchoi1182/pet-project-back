@@ -14,14 +14,14 @@ public class CommentResponse {
     private Integer commentId;
     private String comment;
     private String nickname;
-    private String formattedRegisteredAt;
+    private String createdAt;
 
     public static CommentResponse fromDto(CommentDto comment) {
         return new CommentResponse(
                 comment.getCommentId(),
                 comment.getComment(),
                 comment.getNickname(),
-                DateUtil.formatTimestamp(comment.getRegisteredAt())
+                DateUtil.formatTimestamp(comment.getCreatedAt())
         );
     }
 

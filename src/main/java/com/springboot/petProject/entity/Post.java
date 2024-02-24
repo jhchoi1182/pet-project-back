@@ -36,8 +36,8 @@ public class Post {
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
 
-    @Column(name = "registered_at")
-    private Timestamp registeredAt;
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
@@ -46,8 +46,8 @@ public class Post {
     private Timestamp removedAt;
 
     @PrePersist
-    void registeredAt() {
-        this.registeredAt = Timestamp.from(Instant.now());
+    void createdAt() {
+        this.createdAt = Timestamp.from(Instant.now());
     }
     @PreUpdate
     void updatedAt() {

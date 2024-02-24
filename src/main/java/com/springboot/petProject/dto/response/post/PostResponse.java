@@ -13,7 +13,7 @@ public class PostResponse {
     private String title;
     private String contents;
     private String nickname;
-    private String registeredAt;
+    private String createdAt;
 
     public static PostResponse fromDto(PostDto post) {
         return new PostResponse(
@@ -21,7 +21,7 @@ public class PostResponse {
                 post.getTitle(),
                 post.getContents(),
                 post.getNickname(),
-                DateUtil.formatTimestamp(post.getRegisteredAt())
+                DateUtil.formatTimestamp(post.getCreatedAt())
         );
     }
 

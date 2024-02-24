@@ -14,7 +14,7 @@ public class CommentDto {
     private String comment;
     private Integer postId;
     private String nickname;
-    private Timestamp registeredAt;
+    private Timestamp createdAt;
 
     public static CommentDto fromEntity(Comment entity) {
         return new CommentDto(
@@ -22,7 +22,7 @@ public class CommentDto {
                 entity.getComment(),
                 entity.getPost().getId(),
                 entity.getUser().getNickname(),
-                entity.getRegisteredAt()
+                entity.getCreatedAt()
         );
     }
 

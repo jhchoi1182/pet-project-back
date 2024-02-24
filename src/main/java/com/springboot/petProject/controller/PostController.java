@@ -11,6 +11,8 @@ import com.springboot.petProject.service.AuthenticationService;
 import com.springboot.petProject.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +28,9 @@ public class PostController {
     private final AuthenticationService authenticationService;
 
     @GetMapping
-    public Response<List<PostsResponse>> getPosts() {
-        List<PostDto> posts = postService.getPosts();
-        return Response.success(posts.stream()
-                .map(PostsResponse::fromDto)
-                .collect(Collectors.toList()));
+    public Response<Page<PostsResponse>> getPosts(Pageable pageable) {
+        Page<PostDto> posts = postService.getPosts(pageable);
+        return Response.success(posts.map(PostsResponse::fromDto));
     }
 
     @GetMapping("/{postId}")

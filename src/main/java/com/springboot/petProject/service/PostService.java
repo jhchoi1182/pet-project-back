@@ -8,6 +8,8 @@ import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +24,9 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final AuthenticationService authenticationService;
 
-    public List<PostDto> getPosts() {
-        return postRepository.findAll().stream()
-                .map(PostDto::fromEntity)
-                .collect(Collectors.toList());
+    public Page<PostDto> getPosts(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(PostDto::fromEntity);
     }
 
     public PostDto getPost(Integer postId, Integer userId) {

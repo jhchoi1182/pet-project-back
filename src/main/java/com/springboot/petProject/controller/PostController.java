@@ -7,7 +7,7 @@ import com.springboot.petProject.dto.request.post.PostUpdateRequest;
 import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.dto.response.Response;
-import com.springboot.petProject.service.AuthenticationService;
+import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-    private final AuthenticationService authenticationService;
+    private final ExceptionService exceptionService;
 
     @GetMapping
     public Response<Page<PostsResponse>> getPosts(Pageable pageable) {
@@ -47,14 +44,14 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public Response<PostResponse> updateContents(@PathVariable Integer postId, @Valid @RequestBody PostUpdateRequest request, Authentication authentication) {
-        UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
+        UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
         PostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 
     @DeleteMapping("/{postId}")
     public Response<Void> delete(@PathVariable Integer postId, Authentication authentication) {
-        UserDto user = authenticationService.getAuthenticationPrincipal(authentication);
+        UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
         postService.deletePost(postId, user.getUserId());
         return Response.success();
     }

@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class ExceptionService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;

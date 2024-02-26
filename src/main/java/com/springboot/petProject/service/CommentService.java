@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final AuthenticationService authenticationService;
+    private final ExceptionService exceptionService;
     private final CommentRepository commentRepository;
 
-    public List<CommentDto> getComments(Integer postId, Integer userId) {
-        Post post = authenticationService.getPostIfAuthorized(postId, userId);
+    public List<CommentDto> getComments(Integer postId) {
+        Post post = exceptionService.getPostOrThrowException(postId);
         return commentRepository.findAllByPostId(post.getId()).stream()
                 .map(CommentDto::fromEntity)
                 .collect(Collectors.toList());
@@ -32,9 +32,8 @@ public class CommentService {
     @Transactional
     public void create(Integer postId, String comment, String username) {
         validateCommentNotNull(comment);
-        Post post = authenticationService.getPostOrThrowException(postId);
-        User user = authenticationService.getUserOrThrowException(username);
-        authenticationService.validatePermission(post, user);
+        Post post = exceptionService.getPostOrThrowException(postId);
+        User user = exceptionService.getUserOrThrowException(username);
 
         commentRepository.save(Comment.of(user, post, comment));
     }

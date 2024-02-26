@@ -19,7 +19,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final AuthenticationService authenticationService;
+    private final ExceptionService exceptionService;
 
     public Page<PostDto> getPosts(Pageable pageable) {
         return postRepository.findAll(pageable)
@@ -27,14 +27,14 @@ public class PostService {
     }
 
     public PostDto getPost(Integer postId) {
-        Post post = authenticationService.getPostOrThrowException(postId);
+        Post post = exceptionService.getPostOrThrowException(postId);
         return PostDto.fromEntity(post);
     }
 
     @Transactional
     public void create(String title, String contents, String username) {
         validateTitleAndContentsNotNull(title, contents);
-        User user = authenticationService.getUserOrThrowException(username);
+        User user = exceptionService.getUserOrThrowException(username);
         postRepository.save(Post.of(title, contents, user));
     }
 
@@ -42,7 +42,7 @@ public class PostService {
     public PostDto update(Integer postId, String title, String contents, Integer userId) {
         validateTitleAndContentsNotNull(title, contents);
         ;
-        Post post = authenticationService.getPostIfAuthorized(postId, userId);
+        Post post = exceptionService.getPostIfAuthorized(postId, userId);
 
         post.setTitle(title);
         post.setContents(contents);
@@ -58,7 +58,7 @@ public class PostService {
 
     @Transactional
     public void deletePost(Integer postId, Integer userId) {
-        Post post = authenticationService.getPostIfAuthorized(postId, userId);
+        Post post = exceptionService.getPostIfAuthorized(postId, userId);
         commentRepository.deleteAllByPost(post);
         postRepository.delete(post);
     }

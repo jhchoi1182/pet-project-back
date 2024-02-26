@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
-    public static String formatTimestamp(Timestamp timestamp) {
+    public static String formatTimestamp(Timestamp timestamp, Boolean isYearRequired) {
 
         Instant instant = timestamp.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Asia/Seoul"));
@@ -20,10 +20,14 @@ public class DateUtil {
         LocalDateTime targetTime = zonedDateTime.toLocalDateTime();
 
         if (targetTime.isBefore(yesterdayMidnight)) {
-            if (targetTime.isBefore(firstDayOfYear)) return targetTime.format(DateTimeFormatter.ofPattern("yy.MM.dd"));
+            if (isYearRequired || targetTime.isBefore(firstDayOfYear)) return targetTime.format(DateTimeFormatter.ofPattern("yy.MM.dd"));
             else return targetTime.format(DateTimeFormatter.ofPattern("MM.dd"));
         } else {
             return targetTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         }
+    }
+
+    public static String formatTimestamp(Timestamp timestamp) {
+        return formatTimestamp(timestamp, false);
     }
 }

@@ -21,7 +21,7 @@ public class PostResponse {
                 post.getTitle(),
                 post.getContents(),
                 post.getNickname(),
-                DateUtil.formatTimestamp(post.getCreatedAt())
+                DateUtil.formatTimestamp(post.getCreatedAt(), true)
         );
     }
 

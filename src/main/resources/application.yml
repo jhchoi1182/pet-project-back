@@ -17,17 +17,6 @@ spring:
   web:
     resources:
       add-mappings: false
-  datasource:
-    url: jdbc:mysql://localhost:3306/pet-project
-    username: jhchoi1182
-    password: ${SPRING_DATASOURCE_PASSWORD}
-  jpa:
-    properties:
-      hibernate:
-        format_sql: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
@@ -44,6 +33,17 @@ spring:
   config:
     activate:
       on-profile: local
+  datasource:
+    url: jdbc:mysql://pet-project-database:3306/pet-project
+    username: jhchoi1182
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 pet-project:
   recommendation:
@@ -55,6 +55,18 @@ spring:
   config:
     activate:
       on-profile: prod
+  datasource:
+    url: jdbc:mysql://pet-project-database:3306/pet-project
+    username: jhchoi1182
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 
 pet-project:
   recommendation:

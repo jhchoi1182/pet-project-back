@@ -19,7 +19,7 @@ public class PetProjectApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedMethods("*")
-						.allowedOrigins("http://localhost:3000", "https://next-todo-mu.vercel.app", "https://jihyeon-pet-project.vercel.app");
+						.allowedOrigins("http://localhost:3000", "https://next-todo-mu.vercel.app", "https://jihyeon-pet-project.vercel.app", "https://study-sync-mu.vercel.app");
 			}
 		};
 	}

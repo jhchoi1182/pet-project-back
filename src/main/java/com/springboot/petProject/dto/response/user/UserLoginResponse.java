@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class UserLoginResponse {
     private String token;
-    private String username;
+    private String nickname;
 
 }

@@ -2,11 +2,12 @@ package com.springboot.petProject.service.user;
 
 import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.entity.User;
-import com.springboot.petProject.entity.UserRole;
+import com.springboot.petProject.types.UserRole;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.UserRepository;
 import com.springboot.petProject.types.NameType;
+import com.springboot.petProject.types.UserType;
 import com.springboot.petProject.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +36,7 @@ public class UserService {
         validateName.validateName(username, NameType.USERNAME);
         validateName.validateName(nickname, NameType.NICKNAME);
 
-        User user = userRepository.save(User.of(username, nickname, email, encoder.encode(password), UserRole.USER));
+        User user = userRepository.save(User.of(username, nickname, email, encoder.encode(password), UserRole.USER, UserType.LOCAL));
         return UserDto.fromEntity(user);
     }
 
@@ -60,13 +61,6 @@ public class UserService {
         if (username == null || password == null) {
             throw new CustomExceptionHandler(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
         }
-    }
-
-    public String loginAsGuest() {
-        User guestUser = userRepository.findByUsername("guest")
-                .orElseGet(() -> userRepository.save(User.of("guest", "게스트", "test@test.com", encoder.encode("321321"), UserRole.GUEST)));
-
-        return JwtTokenUtils.generateToken(guestUser.getUsername(), guestUser.getPassword(), secretKey, expiredTimeMs);
     }
 
     @Transactional

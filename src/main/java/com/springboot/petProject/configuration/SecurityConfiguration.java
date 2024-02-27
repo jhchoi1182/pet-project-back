@@ -1,5 +1,6 @@
-package com.springboot.petProject.security;
+package com.springboot.petProject.configuration;
 
+import com.springboot.petProject.exception.CustomAuthenticationEntryPoint;
 import com.springboot.petProject.repository.UserRepository;
 import com.springboot.petProject.util.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
@@ -36,15 +37,13 @@ public class SecurityConfiguration {
                             ).permitAll()
                             .requestMatchers(
                                     HttpMethod.GET,
+                                    "/api/user",
                                     "/api/post",
                                     "/api/post/**"
                             ).permitAll()
                             .requestMatchers(
                                     HttpMethod.POST,
-                                    "/api/user/signup",
-                                    "/api/user/check-username",
-                                    "/api/user/check-nickname",
-                                    "/api/user/login"
+                                    "/api/user/**"
                             ).permitAll()
                             .anyRequest()
                             .authenticated())

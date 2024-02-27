@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -23,13 +24,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final String secretKey;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String requestURI = request.getRequestURI();
 
-        if (requestURI.equals("/user/login") || requestURI.equals("/user/signup")) {
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+
+        if (pathMatcher.match("/api/user/**", requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -76,7 +76,6 @@ public class UserController {
 
     @PostMapping("/logout")
     public Response<Void> returnExpiredToken(Authentication authentication, HttpServletResponse response) {
-        log.info("되냐???");
         cookieService.extractAuthenticationAndSetHeaderCookie(authentication, response , true);
         return Response.success();
     }

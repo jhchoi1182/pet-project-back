@@ -20,8 +20,14 @@ import java.util.Map;
 public class JwtTokenUtils {
 
     public static UserDto validatedUser(UserRepository userRepository, String nickname, String password) {
-        return UserDto.fromEntity(userRepository.findByNickname(nickname).orElseThrow(() ->
+        UserDto user = UserDto.fromEntity(userRepository.findByNickname(nickname).orElseThrow(() ->
                 new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", nickname))));
+
+        if (!password.equals(user.getPassword())) {
+            throw new CustomExceptionHandler(ErrorCode.INVALID_INFO, "Invalid password");
+        }
+
+        return user;
     }
 
     public static String getNickname(String token, String key) {

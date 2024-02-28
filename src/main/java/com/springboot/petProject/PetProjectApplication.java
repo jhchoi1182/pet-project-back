@@ -23,7 +23,9 @@ public class PetProjectApplication {
 								"https://localhost:3000",
 								"https://next-todo-mu.vercel.app",
 								"https://jihyeon-pet-project.vercel.app",
-								"https://study-sync-mu.vercel.app")
+								"https://study-sync-mu.vercel.app",
+								"https://www.studysync.store"
+						)
 						.allowCredentials(true);
 			}
 		};

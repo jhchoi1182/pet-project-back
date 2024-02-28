@@ -16,7 +16,6 @@ import java.util.Arrays;
 public class CookieService {
 
     private final UserService userService;
-    private final Environment env;
 
     public AuthDto extractAuthenticationAndSetHeaderCookie(Authentication authentication, HttpServletResponse response, Boolean expired) {
         AuthDto authDto = userService.extractNicknameAndTokenFromAuthentication(authentication);
@@ -25,12 +24,10 @@ public class CookieService {
     }
 
     public void setHeaderAuthenticationCookie(HttpServletResponse response, String token, Boolean expired) {
-        boolean isSecure = Arrays.asList(env.getActiveProfiles()).contains("prod");
-
         ResponseCookie cookie = ResponseCookie.from("Access_Token", token)
                 .httpOnly(true)
-                .secure(isSecure)
-                .sameSite(isSecure ? "None" : "Lax")
+                .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(expired ? 0 : 7 * 24 * 60 * 60)
                 .build();

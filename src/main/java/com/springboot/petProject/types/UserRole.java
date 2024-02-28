@@ -1,4 +1,4 @@
-package com.springboot.petProject.entity;
+package com.springboot.petProject.types;
 
 public enum UserRole {
     USER,

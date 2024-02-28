@@ -1,7 +1,8 @@
 package com.springboot.petProject.dto;
 
 import com.springboot.petProject.entity.User;
-import com.springboot.petProject.entity.UserRole;
+import com.springboot.petProject.types.UserRole;
+import com.springboot.petProject.types.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +23,7 @@ public class UserDto implements UserDetails {
     private String email;
     private String password;
     private UserRole role;
+    private UserType type;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp removedAt;
@@ -34,6 +36,7 @@ public class UserDto implements UserDetails {
                 entity.getEmail(),
                 entity.getPassword(),
                 entity.getRole(),
+                entity.getType(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getRemovedAt()

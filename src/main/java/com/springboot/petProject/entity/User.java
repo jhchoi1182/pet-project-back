@@ -1,5 +1,7 @@
 package com.springboot.petProject.entity;
 
+import com.springboot.petProject.types.UserRole;
+import com.springboot.petProject.types.UserType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,13 +28,15 @@ public class User {
     @Column(unique = true)
     private String nickname;
 
-    @Column(unique = true)
     private String email;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
+
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @Column(name = "registered_at")
     private Timestamp registeredAt;
@@ -52,13 +56,15 @@ public class User {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static User of(String username, String nickname, String email, String encodedPassword, UserRole role) {
+    public static User of(String username, String nickname, String email, String encodedPassword, UserRole role, UserType type) {
         User entity = new User();
         entity.setUsername(username);
         entity.setNickname(nickname);
         entity.setEmail(email);
         entity.setPassword(encodedPassword);
         entity.setRole(role);
+        entity.setType(type);
         return entity;
     }
+
 }

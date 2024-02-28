@@ -17,6 +17,20 @@ spring:
   web:
     resources:
       add-mappings: false
+  security:
+    oauth2.client:
+      registration:
+        google:
+          clientId: ${GOOGLE_CLIENT_ID}
+          clientSecret: ${GOOGLE_CLIENT_PW}
+          redirectUri: ${GOOGLE_REDIRECT_URI}
+          scope:
+            - email
+            - profile
+      provider:
+        google:
+          tokenUri: https://oauth2.googleapis.com/token
+          userInfoUri: https://openidconnect.googleapis.com/v1/userinfo
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}
@@ -26,7 +40,7 @@ jwt:
 logging:
   level:
     org:
-      springframework: info
+      springframework: debug
 
 ---
 spring:
@@ -34,7 +48,7 @@ spring:
     activate:
       on-profile: local
   datasource:
-    url: jdbc:mysql://pet-project-database:3306/pet-project
+    url: jdbc:mysql://localhost:3306/pet-project
     username: jhchoi1182
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
@@ -43,7 +57,7 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 
 pet-project:
   recommendation:

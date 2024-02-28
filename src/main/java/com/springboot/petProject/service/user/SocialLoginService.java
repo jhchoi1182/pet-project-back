@@ -1,6 +1,7 @@
 package com.springboot.petProject.service.user;
 
 import com.springboot.petProject.dto.response.user.UserLoginResponse;
+import com.springboot.petProject.dto.service.AuthDto;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
@@ -44,7 +45,7 @@ public class SocialLoginService {
     @Value("${spring.security.oauth2.client.provider.google.userInfoUri}")
     private String googleUserInfoUri;
 
-    public UserLoginResponse authenticateGoogleLogin(String code) {
+    public AuthDto authenticateGoogleLogin(String code) {
         String accessToken = getGoogleToken(code);
         Map<String, Object> userDetails = getGoogleUserInfo(accessToken);
 
@@ -52,17 +53,19 @@ public class SocialLoginService {
         String username = "GOOGLE_" + email.split("@")[0];
         String nickname = "GOOGLE_" + email.split("@")[0];
         User user = ensureUniqueGoogleUser(email, username, nickname);
-        String token = JwtTokenUtils.generateToken(user.getUsername(), encoder.encode(user.getUsername()), secretKey, expiredTimeMs);
+        String password = user.getUsername();
 
-        return new UserLoginResponse(token, user.getNickname());
+        String token = JwtTokenUtils.generateToken(user.getNickname(), encoder.encode(password), secretKey, expiredTimeMs);
+
+        return new AuthDto(token, user.getNickname());
     }
 
     private User ensureUniqueGoogleUser(String email, String initialUsername, String initialNickname) {
         User user = userRepository.findByEmail(email).orElse(null);
 
-        log.info("디비에 있는 비밀번호 {}", user.getPassword());
         String username = initialUsername;
         String nickname = initialNickname;
+        String password = username;
 
         if (user == null || !user.getType().equals(UserType.GOOGLE)) {
             boolean isUnique = false;
@@ -80,7 +83,7 @@ public class SocialLoginService {
                     isUnique = true;
                 }
             }
-            user = userRepository.save(User.of(username, nickname, email, encoder.encode(username), UserRole.USER, UserType.GOOGLE));
+            user = userRepository.save(User.of(username, nickname, email, encoder.encode(password), UserRole.USER, UserType.GOOGLE));
         }
         return user;
     }

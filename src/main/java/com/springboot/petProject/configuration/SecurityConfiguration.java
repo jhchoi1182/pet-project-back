@@ -26,35 +26,23 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests(
-                    auth -> auth
-                            .requestMatchers(
-                                    "/",
-                                    "/v3/api-docs/**",
-                                    "/swagger-ui/**",
-                                    "/swagger-resources/**",
-                                    "/webjars/**"
-                            ).permitAll()
-                            .requestMatchers(
-                                    HttpMethod.GET,
-                                    "/api/user",
-                                    "/api/post",
-                                    "/api/post/**"
-                            ).permitAll()
-                            .requestMatchers(
-                                    HttpMethod.POST,
-                                    "/api/user/**"
-                            ).permitAll()
-                            .anyRequest()
-                            .authenticated())
-                .sessionManagement(
-                    session ->
-                            session.sessionCreationPolicy(
-                                    SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/", "/v3/api-docs/**", "/swagger-ui/**",
+                                "/swagger-resources/**", "/webjars/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/post", "/api/post/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/user/check-username", "/api/user/check-nickname",
+                                "/api/user/signup", "/api/user/login", "/api/user/google"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .addFilterBefore(new JwtTokenFilter(userRepository, secretKey), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling((exceptionHandling) ->
-                        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+
 
         return http.build();
     }

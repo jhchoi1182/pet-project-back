@@ -4,6 +4,7 @@ import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,40 +27,49 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final String secretKey;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String requestURI = request.getRequestURI();
+        List<String> allowedUris = Arrays.asList("/api/user", "/api/user/logout", "/api/user/delete");
 
         AntPathMatcher pathMatcher = new AntPathMatcher();
 
-        if (pathMatcher.match("/api/user/**", requestURI)) {
+        if (!allowedUris.contains(requestURI) && pathMatcher.match("/api/user/**", requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(header == null || !header.startsWith("Bearer ")) {
-            log.error("Header is null or invalid");
+        String token = null;
+        String authorizationToken = "Access_Token";
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (authorizationToken.equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null) {
+            log.error("Token is missing from cookies");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            final String token = header.split(" ")[1].trim();
-
             if(JwtTokenUtils.isExpired(token, secretKey)) {
                 log.error("Token is expired");
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            String username = JwtTokenUtils.getUsername(token, secretKey);
+            String nickname = JwtTokenUtils.getNickname(token, secretKey);
             String password = JwtTokenUtils.getPassword(token, secretKey);
 
-            UserDto user = JwtTokenUtils.validatedUser(userRepository, username, password);
-
+            UserDto user = JwtTokenUtils.validatedUser(userRepository, nickname, password);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());
 

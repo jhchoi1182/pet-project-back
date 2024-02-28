@@ -6,5 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserInfoResponse {
-    private String username;
+    private String nickname;
 }

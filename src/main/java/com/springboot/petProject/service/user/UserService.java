@@ -1,6 +1,7 @@
 package com.springboot.petProject.service.user;
 
 import com.springboot.petProject.dto.UserDto;
+import com.springboot.petProject.dto.service.AuthDto;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.types.UserRole;
 import com.springboot.petProject.exception.CustomExceptionHandler;
@@ -11,6 +12,7 @@ import com.springboot.petProject.types.UserType;
 import com.springboot.petProject.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +46,9 @@ public class UserService {
         validateName.validateName(name, nameType);
     }
 
-    public String login(String username, String password) {
+    public AuthDto login(String username, String password) {
         validateUsernameAndPasswordNotNull(username, password);
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        UserDto user = findUser(username);
         if (user.getRemovedAt() != null) {
             throw new CustomExceptionHandler(ErrorCode.USER_REMOVED);
         }
@@ -54,7 +56,23 @@ public class UserService {
         if (!encoder.matches(password, user.getPassword())) {
             throw new CustomExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING);
         }
-        return JwtTokenUtils.generateToken(username, user.getPassword(), secretKey, expiredTimeMs);
+        String token = JwtTokenUtils.generateToken(user.getNickname(), user.getPassword(), secretKey, expiredTimeMs);
+        return new AuthDto(token, user.getNickname());
+    }
+
+    public UserDto findUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        return UserDto.fromEntity(user);
+    }
+
+    public AuthDto extractNicknameAndTokenFromAuthentication(Authentication authentication) {
+        if (authentication == null) throw new CustomExceptionHandler(ErrorCode.INVALID_TOKEN, "No authentication information found.");;
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDto user) {
+            String token = JwtTokenUtils.generateToken(user.getNickname(), user.getPassword(), secretKey, expiredTimeMs);
+            return new AuthDto(token, user.getNickname());
+        } else throw new CustomExceptionHandler(ErrorCode.INVALID_TOKEN, "No authentication information found.");
     }
 
     private void validateUsernameAndPasswordNotNull(String username, String password) {
@@ -65,10 +83,9 @@ public class UserService {
 
     @Transactional
     public void deleteUser(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() ->
-                new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND));
+        UserDto user = findUser(username);
         if (user.getRemovedAt() == null) {
-            userRepository.deleteById(user.getId());
+            userRepository.deleteById(user.getUserId());
         } else {
             throw new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND, "User already deleted");
         }

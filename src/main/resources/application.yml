@@ -43,13 +43,13 @@ logging:
       springframework: info
 
 ---
-server:
-  port: 8443
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: 321321
-    keyStoreType: PKCS12
-    keyAlias: springboot
+#server:
+#  port: 8443
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-password: 321321
+#    keyStoreType: PKCS12
+#    keyAlias: springboot
 
 spring:
   config:

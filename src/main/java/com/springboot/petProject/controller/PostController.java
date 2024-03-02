@@ -17,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
@@ -25,6 +28,14 @@ public class PostController {
 
     private final PostService postService;
     private final ExceptionService exceptionService;
+
+    @GetMapping("/all")
+    public Response<List<PostsResponse>> getAllPosts() {
+        List<PostDto> posts = postService.getAllPosts();
+        return Response.success(posts.stream()
+                .map(PostsResponse::fromDto)
+                .collect(Collectors.toList()));
+    }
 
     @GetMapping
     public Response<Page<PostsResponse>> getPosts(Pageable pageable) {

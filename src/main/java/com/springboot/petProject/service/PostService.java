@@ -13,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -20,6 +23,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final ExceptionService exceptionService;
+
+    public List<PostDto> getAllPosts() {
+        return postRepository.findAll().stream()
+                .map(PostDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     public Page<PostDto> getPosts(Pageable pageable) {
         return postRepository.findAll(pageable)
@@ -62,5 +71,4 @@ public class PostService {
         commentRepository.deleteAllByPost(post);
         postRepository.delete(post);
     }
-
 }

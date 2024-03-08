@@ -7,6 +7,7 @@ import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
+import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final ExceptionService exceptionService;
+    private final Validate validate;
 
     public List<PostDto> getAllPosts() {
         return postRepository.findAll().stream()
@@ -43,6 +45,8 @@ public class PostService {
     @Transactional
     public void create(String title, String contents, String username) {
         validateTitleAndContentsNotNull(title, contents);
+        validate.validateBadWord(title);
+        validate.validateBadWord(contents);
         User user = exceptionService.getUserOrThrowException(username);
         postRepository.save(Post.of(title, contents, user));
     }
@@ -50,7 +54,8 @@ public class PostService {
     @Transactional
     public PostDto update(Integer postId, String title, String contents, Integer userId) {
         validateTitleAndContentsNotNull(title, contents);
-        ;
+        validate.validateBadWord(title);
+        validate.validateBadWord(contents);
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
 
         post.setTitle(title);

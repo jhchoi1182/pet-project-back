@@ -1,4 +1,4 @@
-package com.springboot.petProject.service.user;
+package com.springboot.petProject.util;
 
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
@@ -10,15 +10,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ValidateName {
+public class Validate {
     private final UserRepository userRepository;
+    private final BadWordFiltering badWordFiltering = new BadWordFiltering();
 
     public void validateName(String name, NameType nameType) {
-        BadWordFiltering badWordFiltering = new BadWordFiltering();
-        boolean isBadWord = badWordFiltering.check(name);
 
         validateBlank(name);
-        validateBadWord(isBadWord);
+        validateBadWord(name);
 
         switch (nameType) {
             case USERNAME:
@@ -38,7 +37,8 @@ public class ValidateName {
         }
     }
 
-    private void validateBadWord(boolean isBadWord) {
+    public void validateBadWord(String text) {
+        boolean isBadWord = badWordFiltering.check(text);
         if (isBadWord) {
             throw new CustomExceptionHandler(ErrorCode.PROFANITY_INCLUDED, "Invalid name type");
         }

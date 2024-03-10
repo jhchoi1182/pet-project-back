@@ -7,6 +7,7 @@ import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.repository.CommentRepository;
+import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ public class CommentService {
 
     private final ExceptionService exceptionService;
     private final CommentRepository commentRepository;
+    private final Validate validate;
 
     public List<CommentDto> getComments(Integer postId) {
         Post post = exceptionService.getPostOrThrowException(postId);
@@ -32,6 +34,7 @@ public class CommentService {
     @Transactional
     public void create(Integer postId, String comment, String username) {
         validateCommentNotNull(comment);
+        validate.validateBadWord(comment);
         Post post = exceptionService.getPostOrThrowException(postId);
         User user = exceptionService.getUserOrThrowException(username);
 
@@ -41,6 +44,7 @@ public class CommentService {
     @Transactional
     public CommentDto update(Integer commentId, String comment, Integer userId) {
         validateCommentNotNull(comment);
+        validate.validateBadWord(comment);
         Comment commentEntity = getCommentIfAuthorized(commentId, userId);
 
         commentEntity.setComment(comment);

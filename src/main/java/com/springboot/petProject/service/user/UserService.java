@@ -10,6 +10,7 @@ import com.springboot.petProject.repository.UserRepository;
 import com.springboot.petProject.types.NameType;
 import com.springboot.petProject.types.UserType;
 import com.springboot.petProject.util.JwtTokenUtils;
+import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ValidateName validateName;
+    private final Validate validateName;
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.secret-key}")
     private String secretKey;

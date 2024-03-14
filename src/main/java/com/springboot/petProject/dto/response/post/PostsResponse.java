@@ -5,6 +5,8 @@ import com.springboot.petProject.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.sql.Timestamp;
+
 @AllArgsConstructor
 @Getter
 public class PostsResponse {
@@ -14,6 +16,7 @@ public class PostsResponse {
     private String nickname;
     private int commentsCount;
     private String createdAt;
+    private Timestamp updatedAt;
 
     public static PostsResponse fromDto(PostDto post) {
         return new PostsResponse(
@@ -21,7 +24,8 @@ public class PostsResponse {
                 post.getTitle(),
                 post.getNickname(),
                 post.getCommentsCount(),
-                DateUtil.formatTimestamp(post.getCreatedAt())
+                DateUtil.formatTimestamp(post.getCreatedAt()),
+                post.getUpdatedAt()
         );
     }
 

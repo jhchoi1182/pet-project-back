@@ -12,19 +12,16 @@ public class DateUtil {
 
         Instant instant = timestamp.toInstant();
         ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Asia/Seoul"));
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-
-        LocalDateTime todayMidnight = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0);
-        LocalDateTime yesterdayMidnight = todayMidnight.minusDays(1);
-        LocalDateTime firstDayOfYear = LocalDateTime.of(now.getYear(), 1, 1, 0, 0);
         LocalDateTime targetTime = zonedDateTime.toLocalDateTime();
 
-        if (targetTime.isBefore(yesterdayMidnight)) {
-            if (isYearRequired || targetTime.isBefore(firstDayOfYear)) return targetTime.format(DateTimeFormatter.ofPattern("yy.MM.dd"));
-            else return targetTime.format(DateTimeFormatter.ofPattern("MM.dd"));
-        } else {
-            return targetTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-        }
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime firstDayOfYear = LocalDateTime.of(now.getYear(), 1, 1, 0, 0);
+        LocalDateTime todayMidnight = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0);
+
+        if (isYearRequired || targetTime.isBefore(firstDayOfYear)) return targetTime.format(DateTimeFormatter.ofPattern("yy.MM.dd"));
+        if (targetTime.isBefore(todayMidnight)) return targetTime.format(DateTimeFormatter.ofPattern("MM.dd"));
+        else return targetTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+
     }
 
     public static String formatTimestamp(Timestamp timestamp) {

@@ -1,6 +1,6 @@
 package com.springboot.petProject.dto.response.post;
 
-import com.springboot.petProject.dto.PostDto;
+import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class PostResponse {
     private String nickname;
     private String createdAt;
 
-    public static PostResponse fromDto(PostDto post) {
+    public static PostResponse fromDto(DetailPostDto post) {
         return new PostResponse(
                 post.getPostId(),
                 post.getTitle(),

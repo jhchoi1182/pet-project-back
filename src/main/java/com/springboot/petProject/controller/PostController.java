@@ -1,5 +1,6 @@
 package com.springboot.petProject.controller;
 
+import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.dto.request.post.PostCreateRequest;
@@ -45,7 +46,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public Response<PostResponse> getPost(@PathVariable Integer postId) {
-        PostDto post = postService.getPost(postId);
+        DetailPostDto post = postService.getPost(postId);
         return Response.success(PostResponse.fromDto(post));
     }
 
@@ -58,7 +59,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public Response<PostResponse> updateContents(@PathVariable Integer postId, @Valid @RequestBody PostUpdateRequest request, Authentication authentication) {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
-        PostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
+        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

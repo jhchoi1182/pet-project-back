@@ -75,6 +75,6 @@ public class PostService {
     public void deletePost(Integer postId, Integer userId) {
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
         commentRepository.deleteAllByPost(post);
-        postRepository.delete(post);
+        postRepository.deleteByPost(post);
     }
 }

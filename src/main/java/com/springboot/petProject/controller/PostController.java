@@ -5,14 +5,13 @@ import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.dto.request.post.PostCreateRequest;
 import com.springboot.petProject.dto.request.post.PostUpdateRequest;
+import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
-import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
-@Slf4j
 public class PostController {
 
     private final PostService postService;

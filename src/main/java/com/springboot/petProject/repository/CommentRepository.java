@@ -14,7 +14,11 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    List<Comment> findAllByPostId(Integer postId);
+    @Query("SELECT comment FROM Comment comment " +
+            "LEFT JOIN FETCH comment.post post " +
+            "LEFT JOIN FETCH post.user " +
+            "WHERE comment.post.id = :postId AND comment.removedAt IS NULL AND post.removedAt IS NULL")
+    List<Comment> findAllByPostIdWithUser(@Param("postId") Integer postId);
 
     @Transactional
     @Modifying

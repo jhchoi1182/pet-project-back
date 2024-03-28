@@ -1,17 +1,17 @@
 package com.springboot.petProject.controller;
 
+import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.dto.request.post.PostCreateRequest;
 import com.springboot.petProject.dto.request.post.PostUpdateRequest;
+import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
-import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
-@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -45,7 +44,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public Response<PostResponse> getPost(@PathVariable Integer postId) {
-        PostDto post = postService.getPost(postId);
+        DetailPostDto post = postService.getPost(postId);
         return Response.success(PostResponse.fromDto(post));
     }
 
@@ -58,7 +57,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public Response<PostResponse> updateContents(@PathVariable Integer postId, @Valid @RequestBody PostUpdateRequest request, Authentication authentication) {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
-        PostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
+        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

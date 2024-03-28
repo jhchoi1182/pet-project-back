@@ -1,5 +1,6 @@
 package com.springboot.petProject.service;
 
+import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.entity.Post;
 import com.springboot.petProject.entity.User;
@@ -37,9 +38,9 @@ public class PostService {
                 .map(PostDto::fromEntity);
     }
 
-    public PostDto getPost(Integer postId) {
+    public DetailPostDto getPost(Integer postId) {
         Post post = exceptionService.getPostOrThrowException(postId);
-        return PostDto.fromEntity(post);
+        return DetailPostDto.fromEntity(post);
     }
 
     @Transactional
@@ -52,7 +53,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto update(Integer postId, String title, String contents, Integer userId) {
+    public DetailPostDto update(Integer postId, String title, String contents, Integer userId) {
         validateTitleAndContentsNotNull(title, contents);
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
@@ -61,7 +62,7 @@ public class PostService {
         post.setTitle(title);
         post.setContents(contents);
 
-        return PostDto.fromEntity(postRepository.save(post));
+        return DetailPostDto.fromEntity(postRepository.save(post));
     }
 
     private void validateTitleAndContentsNotNull(String title, String contents) {
@@ -74,6 +75,6 @@ public class PostService {
     public void deletePost(Integer postId, Integer userId) {
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
         commentRepository.deleteAllByPost(post);
-        postRepository.delete(post);
+        postRepository.deleteByPost(post);
     }
 }

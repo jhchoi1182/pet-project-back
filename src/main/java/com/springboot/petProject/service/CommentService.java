@@ -4,8 +4,8 @@ import com.springboot.petProject.dto.CommentDto;
 import com.springboot.petProject.entity.Comment;
 import com.springboot.petProject.entity.Post;
 import com.springboot.petProject.entity.User;
-import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.exception.CustomExceptionHandler;
+import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,7 @@ public class CommentService {
     private final Validate validate;
 
     public List<CommentDto> getComments(Integer postId) {
-        Post post = exceptionService.getPostOrThrowException(postId);
-        return commentRepository.findAllByPostId(post.getId()).stream()
+        return commentRepository.findAllByPostIdWithUser(postId).stream()
                 .map(CommentDto::fromEntity)
                 .collect(Collectors.toList());
     }

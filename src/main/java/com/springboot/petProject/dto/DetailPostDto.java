@@ -8,23 +8,21 @@ import java.sql.Timestamp;
 
 @AllArgsConstructor
 @Getter
-public class PostDto {
+public class DetailPostDto {
 
     private Integer postId;
     private String title;
     private String contents;
     private String nickname;
-    private int commentsCount;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    public static PostDto fromEntity(Post entity) {
-        return new PostDto(
+    public static DetailPostDto fromEntity(Post entity) {
+        return new DetailPostDto(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContents(),
                 entity.getUser().getNickname(),
-                entity.getComments().size(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

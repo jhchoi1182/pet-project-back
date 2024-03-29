@@ -50,14 +50,14 @@ public class PostController {
 
     @PostMapping
     public Response<Void> create(@Valid @RequestBody PostCreateRequest request, Authentication authentication) {
-        postService.create(request.getTitle(), request.getContents(), authentication.getName());
+        postService.create(request.getTitle(), request.getContents(), request.getImages(), authentication.getName());
         return Response.success();
     }
 
     @PatchMapping("/{postId}")
     public Response<PostResponse> updateContents(@PathVariable Integer postId, @Valid @RequestBody PostUpdateRequest request, Authentication authentication) {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
-        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
+        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), request.getImages(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

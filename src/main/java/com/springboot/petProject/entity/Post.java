@@ -27,6 +27,7 @@ public class Post {
 
     @Column(name = "contents", columnDefinition = "TEXT")
     private String contents;
+    private List<String> images;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -54,10 +55,11 @@ public class Post {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(String title, String contents, User user) {
+    public static Post of(String title, String contents, List<String> images, User user) {
         Post entity = new Post();
         entity.setTitle(title);
         entity.setContents(contents);
+        entity.setImages(images);
         entity.setUser(user);
         return entity;
     }

@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class PostUpdateRequest {
@@ -12,5 +14,6 @@ public class PostUpdateRequest {
     private String title;
     @Size(min = 1, message = "Post should have atleast 1 characters")
     private String contents;
+    private List<String> images;
 
 }

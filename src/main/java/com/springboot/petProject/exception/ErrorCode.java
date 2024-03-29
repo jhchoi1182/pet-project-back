@@ -24,6 +24,7 @@ public enum ErrorCode {
     DUPLICATED_NAME(HttpStatus.CONFLICT, "Duplicated name"),
     SERVER_ERROR(HttpStatus.CONFLICT, "Server error occurs"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
+    S3_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to upload file to S3"),
     CLASS_CAST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Casting error occurred"),
     AUTHENTICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid Authentication")
     ;

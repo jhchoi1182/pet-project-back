@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -13,6 +14,7 @@ public class DetailPostDto {
     private Integer postId;
     private String title;
     private String contents;
+    private List<String> images;
     private String nickname;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -22,6 +24,7 @@ public class DetailPostDto {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContents(),
+                entity.getImages(),
                 entity.getUser().getNickname(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

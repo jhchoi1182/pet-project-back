@@ -53,23 +53,30 @@ public class PostService {
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
         User user = exceptionService.getUserOrThrowException(username);
+        List<String> images = uploadImagesToS3(base64Images);
+        postRepository.save(Post.of(title, contents, images, user));
+    }
+
+    private List<String> uploadImagesToS3(List<String> base64Images) {
         List<String> images = new ArrayList<>();
         if (!base64Images.isEmpty()) {
             images = s3UploadService.uploadBase64Images(base64Images);
         }
-        postRepository.save(Post.of(title, contents, images, user));
+        return images;
     }
 
     @Transactional
-    public DetailPostDto update(Integer postId, String title, String contents, Integer userId) {
+    public DetailPostDto update(Integer postId, String title, String contents, List<String> base64Images, Integer userId) {
         validateTitleAndContentsNotNull(title, contents);
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
+        List<String> images = uploadImagesToS3(base64Images);
 
         post.setTitle(title);
         post.setContents(contents);
-
+        post.setImages(images);
+        
         return DetailPostDto.fromEntity(postRepository.save(post));
     }
 

@@ -57,7 +57,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public Response<PostResponse> updateContents(@PathVariable Integer postId, @Valid @RequestBody PostUpdateRequest request, Authentication authentication) {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
-        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), user.getUserId());
+        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), request.getImages(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

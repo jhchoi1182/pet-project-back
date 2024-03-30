@@ -8,6 +8,7 @@ import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
+import com.springboot.petProject.util.HtmlTextUtil;
 import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +53,12 @@ public class PostService {
         validateTitleAndContentsNotNull(title, contents);
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
+
         User user = exceptionService.getUserOrThrowException(username);
+        String filteredContents = HtmlTextUtil.extractTextFromHtml(contents);
         List<String> images = uploadImagesToS3(base64Images);
-        postRepository.save(Post.of(title, contents, images, user));
+
+        postRepository.save(Post.of(title, contents, filteredContents, images, user));
     }
 
     private List<String> uploadImagesToS3(List<String> base64Images) {
@@ -71,10 +75,12 @@ public class PostService {
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
+        String filteredContents = HtmlTextUtil.extractTextFromHtml(contents);
         List<String> images = uploadImagesToS3(base64Images);
 
         post.setTitle(title);
         post.setContents(contents);
+        post.setNoHtmlContents(filteredContents);
         post.setImages(images);
         
         return DetailPostDto.fromEntity(postRepository.save(post));

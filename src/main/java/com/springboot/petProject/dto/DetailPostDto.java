@@ -14,6 +14,7 @@ public class DetailPostDto {
     private Integer postId;
     private String title;
     private String contents;
+    private String noHtmlContents;
     private List<String> images;
     private String nickname;
     private Timestamp createdAt;
@@ -24,6 +25,7 @@ public class DetailPostDto {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContents(),
+                entity.getNoHtmlContents(),
                 entity.getImages(),
                 entity.getUser().getNickname(),
                 entity.getCreatedAt(),

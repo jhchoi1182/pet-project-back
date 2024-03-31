@@ -14,6 +14,7 @@ public class PostResponse {
     private Integer postId;
     private String title;
     private String contents;
+    private String noHtmlContents;
     private List<String> images;
     private String nickname;
     private String createdAt;
@@ -23,6 +24,7 @@ public class PostResponse {
                 post.getPostId(),
                 post.getTitle(),
                 post.getContents(),
+                post.getNoHtmlContents(),
                 post.getImages(),
                 post.getNickname(),
                 DateUtil.formatTimestamp(post.getCreatedAt(), true)

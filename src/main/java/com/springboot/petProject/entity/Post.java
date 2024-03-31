@@ -27,6 +27,10 @@ public class Post {
 
     @Column(name = "contents", columnDefinition = "TEXT")
     private String contents;
+
+    @Column(name = "noHtmlContents", columnDefinition = "TEXT")
+    private String noHtmlContents;
+
     private List<String> images;
 
     @ManyToOne
@@ -55,10 +59,11 @@ public class Post {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(String title, String contents, List<String> images, User user) {
+    public static Post of(String title, String contents, String noHtmlContents, List<String> images, User user) {
         Post entity = new Post();
         entity.setTitle(title);
         entity.setContents(contents);
+        entity.setNoHtmlContents(noHtmlContents);
         entity.setImages(images);
         entity.setUser(user);
         return entity;

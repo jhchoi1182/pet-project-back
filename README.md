@@ -1,6 +1,6 @@
 ## 🗺프로젝트 아키텍처
 
-![image](https://github.com/jhchoi1182/pet-project-back/assets/116577489/32d82649-c833-4ca3-9d02-517964391e2d)
+![image](https://github.com/jhchoi1182/pet-project-front/assets/116577489/9d9e9a3e-ef7f-4032-a656-401389b101dc)
 
 ## 🎉소개
 이 프로젝트는 배운 기술을 실제로 적용하며 점진적으로 기능을 추가해 나가는 것을 목표로 진행되고 있는 개인 프로젝트입니다.
@@ -16,7 +16,8 @@
 * User, Post, Comment 모델의 데이터 테이블: RDBMS를 이용해 Entity 간 관계 매핑
 * **DTO를 활용**함으로써 계층 간 데이터 관리의 안정성, 효율성 확보
 * **불필요한 쿼리 요청 최적화**
-  * 게시글 삭제 시 @Modifying 및 @Query 어노테이션을 활용하여 Comment 삭제에 대한 **벌크 업데이트**
+  * 게시글 삭제 시 **벌크 업데이트**를 통해 댓글 삭제
+  * JOIN FETCH를 통해 JPA의 N+1문제 해결
 * **AWS EC2, Docker Compose를 이용해 배포**하여 배포 일관성 유지
   * 프로젝트의 일관성을 보장하고 관리를 간소화하기 위해 프론트엔드, 백엔드, 데이터베이스를 통합된 컨테이너 환경으로 구성하는 것을 목표로 Docker Compose를 도입
   * Docker로 배포 시 AWS EC2의 메모리 부족으로 인한 **CPU 과부하 문제 발생**
@@ -30,6 +31,7 @@
   * jwt 토큰 생성 후 **응답 헤더에 쿠키 설정 (httpOnly, seecure, sameSite 설정으로 XSS, CSRF 공격 대비)**
   * Spring Security를 이용해 인증 로직 전역 핸들링
 * Swagger를 통한 API 명세 작업
+* S3에 연결해 이미지 저장 후 MySQL에 post 테이블에 S3 URL 저장
 
 <br>
 

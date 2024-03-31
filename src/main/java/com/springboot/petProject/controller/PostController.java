@@ -9,7 +9,7 @@ import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.service.ExceptionService;
-import com.springboot.petProject.service.PostService;
+import com.springboot.petProject.service.post.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,6 +39,12 @@ public class PostController {
     @GetMapping
     public Response<Page<PostsResponse>> getPosts(Pageable pageable) {
         Page<PostDto> posts = postService.getPosts(pageable);
+        return Response.success(posts.map(PostsResponse::fromDto));
+    }
+
+    @GetMapping("/search")
+    public Response<Page<PostsResponse>> searchPosts(@RequestParam String type, @RequestParam String value, Pageable pageable) {
+        Page<PostDto> posts = postService.searchPosts(type, value, pageable);
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 

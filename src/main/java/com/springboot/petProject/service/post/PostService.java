@@ -1,4 +1,4 @@
-package com.springboot.petProject.service;
+package com.springboot.petProject.service.post;
 
 import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
@@ -8,12 +8,14 @@ import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
+import com.springboot.petProject.service.ExceptionService;
+import com.springboot.petProject.service.S3UploadService;
 import com.springboot.petProject.util.HtmlTextUtil;
 import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +25,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final ExceptionService exceptionService;
     private final S3UploadService s3UploadService;
+    private final PostSearchSpecification postSearchSpecification;
     private final Validate validate;
 
     public List<PostDto> getAllPosts() {
@@ -41,6 +43,11 @@ public class PostService {
     public Page<PostDto> getPosts(Pageable pageable) {
         return postRepository.findAll(pageable)
                 .map(PostDto::fromEntity);
+    }
+
+    public Page<PostDto> searchPosts(String type, String value, Pageable pageable) {
+        Specification<Post> spec = postSearchSpecification.search(type, value);
+        return postRepository.findAll(spec, pageable).map(PostDto::fromEntity);
     }
 
     public DetailPostDto getPost(Integer postId) {
@@ -98,4 +105,6 @@ public class PostService {
         commentRepository.deleteAllByPost(post);
         postRepository.deleteByPost(post);
     }
+
+
 }

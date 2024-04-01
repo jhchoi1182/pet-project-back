@@ -60,18 +60,15 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Response<UserLoginResponse>> login(@RequestBody UserLoginRequest request, HttpServletResponse response) {
         AuthDto authDto = userService.login(request.getUsername(), request.getPassword());
-        cookieService.setHeaderAuthenticationCookie(response, authDto.getToken(), false);
-
         return ResponseEntity.ok()
-                .body(Response.success(new UserLoginResponse(authDto.getNickname())));
+                .body(Response.success(new UserLoginResponse(authDto.getToken(), authDto.getNickname())));
     }
 
     @PostMapping("/google")
     public ResponseEntity<Response<UserLoginResponse>> googleLogin(@RequestBody UserSocialLoginRequest request, HttpServletResponse response) {
         AuthDto authDto = socialLoginService.authenticateGoogleLogin(request.getCode());
-        cookieService.setHeaderAuthenticationCookie(response, authDto.getToken(), false);
         return ResponseEntity.ok()
-                .body(Response.success(new UserLoginResponse(authDto.getNickname())));
+                .body(Response.success(new UserLoginResponse(authDto.getToken(), authDto.getNickname())));
     }
 
     @PostMapping("/logout")

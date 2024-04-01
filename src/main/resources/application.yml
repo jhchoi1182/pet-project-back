@@ -87,10 +87,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 
 
 pet-project:
   recommendation:
     base:
-      url: https://jihyeon.store/dir/
+      url: https://api.studysync.store/dir/

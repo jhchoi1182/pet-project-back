@@ -30,7 +30,7 @@ public class CookieService {
         ResponseCookie cookie = ResponseCookie.from("Access_Token", token)
                 .httpOnly(true)
                 .secure(isProd)
-                .sameSite(isProd ? "None" : "Lax")
+                .sameSite(isProd ? "Strict" : "None")
                 .path("/")
                 .maxAge(expired ? 0 : 365 * 24 * 60 * 60)
                 .build();

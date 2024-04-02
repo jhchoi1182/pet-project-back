@@ -29,6 +29,7 @@
 * 유저에 대한 보안 강화
   * **Jwt 토큰을 사용**하여 보안 강화
   * jwt 토큰 생성 후 **응답 헤더에 쿠키 설정 (httpOnly, seecure, sameSite 설정으로 XSS, CSRF 공격 대비)**
+    * 서버 URL을 프론트 엔드의 서브 도메인 주소로 전환하여 서드 파티 쿠키를 퍼스트 파티 쿠키로 처리되도록 변경 (Chrome 서드 파티 쿠키 제한 이슈 해결)
   * Spring Security를 이용해 인증 로직 전역 핸들링
 * Swagger를 통한 API 명세 작업
 * S3에 연결해 이미지 저장 후 MySQL에 post 테이블에 S3 URL 저장

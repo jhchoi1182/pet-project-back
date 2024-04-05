@@ -1,6 +1,7 @@
 package com.springboot.petProject.dto.response.post;
 
 import com.springboot.petProject.dto.PostDto;
+import com.springboot.petProject.types.PostCategory;
 import com.springboot.petProject.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 public class PostsResponse {
 
     private Integer postId;
+    private PostCategory category;
     private String title;
     private String nickname;
     private int commentsCount;
@@ -21,6 +23,7 @@ public class PostsResponse {
     public static PostsResponse fromDto(PostDto post) {
         return new PostsResponse(
                 post.getPostId(),
+                post.getCategory(),
                 post.getTitle(),
                 post.getNickname(),
                 post.getCommentsCount(),

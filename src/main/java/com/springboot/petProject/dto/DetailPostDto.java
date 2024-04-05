@@ -1,6 +1,7 @@
 package com.springboot.petProject.dto;
 
 import com.springboot.petProject.entity.Post;
+import com.springboot.petProject.types.PostCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class DetailPostDto {
 
     private Integer postId;
+    private PostCategory category;
     private String title;
     private String contents;
     private String noHtmlContents;
@@ -23,6 +25,7 @@ public class DetailPostDto {
     public static DetailPostDto fromEntity(Post entity) {
         return new DetailPostDto(
                 entity.getId(),
+                entity.getCategory(),
                 entity.getTitle(),
                 entity.getContents(),
                 entity.getNoHtmlContents(),

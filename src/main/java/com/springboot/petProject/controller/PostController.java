@@ -10,6 +10,8 @@ import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.post.PostService;
+import com.springboot.petProject.types.request.CategoryRequest;
+import com.springboot.petProject.types.request.SearchType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,8 +45,8 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public Response<Page<PostsResponse>> searchPosts(@RequestParam String type, @RequestParam String value, Pageable pageable) {
-        Page<PostDto> posts = postService.searchPosts(type, value, pageable);
+    public Response<Page<PostsResponse>> searchPosts(@RequestParam CategoryRequest category, @RequestParam SearchType searchType, @RequestParam String value, Pageable pageable) {
+        Page<PostDto> posts = postService.searchPosts(category, searchType, value, pageable);
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 
@@ -56,14 +58,14 @@ public class PostController {
 
     @PostMapping
     public Response<Void> create(@Valid @RequestBody PostCreateRequest request, Authentication authentication) {
-        postService.create(request.getTitle(), request.getContents(), request.getImages(), authentication.getName());
+        postService.create(request.getCategory(), request.getTitle(), request.getContents(), request.getImages(), authentication.getName());
         return Response.success();
     }
 
     @PatchMapping("/{postId}")
     public Response<PostResponse> updateContents(@PathVariable Integer postId, @Valid @RequestBody PostUpdateRequest request, Authentication authentication) {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
-        DetailPostDto post = postService.update(postId, request.getTitle(), request.getContents(), request.getImages(), user.getUserId());
+        DetailPostDto post = postService.update(postId, request.getCategory(), request.getTitle(), request.getContents(), request.getImages(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

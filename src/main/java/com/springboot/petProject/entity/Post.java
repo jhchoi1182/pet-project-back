@@ -1,5 +1,6 @@
 package com.springboot.petProject.entity;
 
+import com.springboot.petProject.types.PostCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,9 @@ public class Post {
     @GeneratedValue
     @Column(name = "post_id")
     private Integer id;
+
+    @Column(name = "category")
+    private PostCategory postCategory;
 
     private String title;
 

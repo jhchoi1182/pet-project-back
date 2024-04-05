@@ -10,6 +10,7 @@ import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.S3UploadService;
+import com.springboot.petProject.types.PostCategory;
 import com.springboot.petProject.types.request.CategoryRequest;
 import com.springboot.petProject.types.request.SearchType;
 import com.springboot.petProject.util.HtmlTextUtil;
@@ -58,7 +59,7 @@ public class PostService {
     }
 
     @Transactional
-    public void create(String title, String contents, List<String> base64Images, String username) {
+    public void create(PostCategory category ,String title, String contents, List<String> base64Images, String username) {
         validateTitleAndContentsNotNull(title, contents);
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
@@ -67,7 +68,7 @@ public class PostService {
         String filteredContents = HtmlTextUtil.extractTextFromHtml(contents);
         List<String> images = uploadImagesToS3(base64Images);
 
-        postRepository.save(Post.of(title, contents, filteredContents, images, user));
+        postRepository.save(Post.of(category, title, contents, filteredContents, images, user));
     }
 
     private List<String> uploadImagesToS3(List<String> base64Images) {
@@ -79,7 +80,7 @@ public class PostService {
     }
 
     @Transactional
-    public DetailPostDto update(Integer postId, String title, String contents, List<String> base64Images, Integer userId) {
+    public DetailPostDto update(Integer postId, PostCategory category, String title, String contents, List<String> base64Images, Integer userId) {
         validateTitleAndContentsNotNull(title, contents);
         validate.validateBadWord(title);
         validate.validateBadWord(contents);
@@ -87,6 +88,7 @@ public class PostService {
         String filteredContents = HtmlTextUtil.extractTextFromHtml(contents);
         List<String> images = uploadImagesToS3(base64Images);
 
+        post.setCategory(category);
         post.setTitle(title);
         post.setContents(contents);
         post.setNoHtmlContents(filteredContents);

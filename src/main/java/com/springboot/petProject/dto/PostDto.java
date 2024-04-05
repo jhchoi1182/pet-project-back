@@ -25,7 +25,7 @@ public class PostDto {
     public static PostDto fromEntity(Post entity) {
         return new PostDto(
                 entity.getId(),
-                entity.getPostCategory(),
+                entity.getCategory(),
                 entity.getTitle(),
                 entity.getContents(),
                 entity.getImages(),

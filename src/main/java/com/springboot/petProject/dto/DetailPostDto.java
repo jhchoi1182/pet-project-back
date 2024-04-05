@@ -25,7 +25,7 @@ public class DetailPostDto {
     public static DetailPostDto fromEntity(Post entity) {
         return new DetailPostDto(
                 entity.getId(),
-                entity.getPostCategory(),
+                entity.getCategory(),
                 entity.getTitle(),
                 entity.getContents(),
                 entity.getNoHtmlContents(),

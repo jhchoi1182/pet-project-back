@@ -24,8 +24,7 @@ public class Post {
     @Column(name = "post_id")
     private Integer id;
 
-    @Column(name = "category")
-    private PostCategory postCategory;
+    private PostCategory category;
 
     private String title;
 
@@ -63,8 +62,9 @@ public class Post {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(String title, String contents, String noHtmlContents, List<String> images, User user) {
+    public static Post of(PostCategory category, String title, String contents, String noHtmlContents, List<String> images, User user) {
         Post entity = new Post();
+        entity.setCategory(category);
         entity.setTitle(title);
         entity.setContents(contents);
         entity.setNoHtmlContents(noHtmlContents);

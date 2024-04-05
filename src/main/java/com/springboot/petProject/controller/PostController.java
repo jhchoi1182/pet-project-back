@@ -10,6 +10,8 @@ import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.post.PostService;
+import com.springboot.petProject.types.request.CategoryRequest;
+import com.springboot.petProject.types.request.SearchType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,8 +45,8 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public Response<Page<PostsResponse>> searchPosts(@RequestParam String type, @RequestParam String value, Pageable pageable) {
-        Page<PostDto> posts = postService.searchPosts(type, value, pageable);
+    public Response<Page<PostsResponse>> searchPosts(@RequestParam CategoryRequest category, @RequestParam SearchType searchType, @RequestParam String value, Pageable pageable) {
+        Page<PostDto> posts = postService.searchPosts(category, searchType, value, pageable);
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 

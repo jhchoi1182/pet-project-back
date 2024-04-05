@@ -10,6 +10,8 @@ import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.S3UploadService;
+import com.springboot.petProject.types.request.CategoryRequest;
+import com.springboot.petProject.types.request.SearchType;
 import com.springboot.petProject.util.HtmlTextUtil;
 import com.springboot.petProject.util.Validate;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +47,8 @@ public class PostService {
                 .map(PostDto::fromEntity);
     }
 
-    public Page<PostDto> searchPosts(String type, String value, Pageable pageable) {
-        Specification<Post> spec = postSearchSpecification.search(type, value);
+    public Page<PostDto> searchPosts(CategoryRequest category, SearchType searchType, String value, Pageable pageable) {
+        Specification<Post> spec = postSearchSpecification.search(category, searchType, value);
         return postRepository.findAll(spec, pageable).map(PostDto::fromEntity);
     }
 

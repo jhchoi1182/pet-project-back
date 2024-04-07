@@ -19,6 +19,8 @@ public class DetailPostDto {
     private String noHtmlContents;
     private List<String> images;
     private String nickname;
+    private Integer view;
+    private Integer likes;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -31,6 +33,8 @@ public class DetailPostDto {
                 entity.getNoHtmlContents(),
                 entity.getImages(),
                 entity.getUser().getNickname(),
+                entity.getView(),
+                entity.getLikes(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

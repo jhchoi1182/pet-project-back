@@ -36,6 +36,10 @@ public class Post {
 
     private List<String> images;
 
+    private Integer view = 0;
+
+    private Integer likes = 0;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -43,6 +47,10 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private List<PostViewLog> viewLogs;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

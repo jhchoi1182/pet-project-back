@@ -16,7 +16,9 @@ public class PostsResponse {
     private PostCategory category;
     private String title;
     private String nickname;
-    private int commentsCount;
+    private Integer commentsCount;
+    private Integer view;
+    private Integer likes;
     private String createdAt;
     private Timestamp updatedAt;
 
@@ -27,6 +29,8 @@ public class PostsResponse {
                 post.getTitle(),
                 post.getNickname(),
                 post.getCommentsCount(),
+                post.getView(),
+                post.getLikes(),
                 DateUtil.formatTimestamp(post.getCreatedAt()),
                 post.getUpdatedAt()
         );

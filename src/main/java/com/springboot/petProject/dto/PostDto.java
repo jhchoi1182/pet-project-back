@@ -18,7 +18,9 @@ public class PostDto {
     private String contents;
     private List<String> images;
     private String nickname;
-    private int commentsCount;
+    private Integer commentsCount;
+    private Integer view;
+    private Integer likes;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -31,6 +33,8 @@ public class PostDto {
                 entity.getImages(),
                 entity.getUser().getNickname(),
                 entity.getComments().size(),
+                entity.getView(),
+                entity.getLikes(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

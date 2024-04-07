@@ -12,8 +12,10 @@ import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.post.PostService;
 import com.springboot.petProject.types.request.CategoryRequest;
 import com.springboot.petProject.types.request.SearchType;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -51,7 +54,8 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public Response<PostResponse> getPost(@PathVariable Integer postId) {
+    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletRequest request) {
+        String remoteAddr = request.getRemoteAddr();
         DetailPostDto post = postService.getPost(postId);
         return Response.success(PostResponse.fromDto(post));
     }

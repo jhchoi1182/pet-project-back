@@ -10,9 +10,11 @@ import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.post.PostService;
+import com.springboot.petProject.service.user.CookieService;
 import com.springboot.petProject.types.request.CategoryRequest;
 import com.springboot.petProject.types.request.SearchType;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,13 @@ public class PostController {
 
     private final PostService postService;
     private final ExceptionService exceptionService;
+    private final CookieService cookieService;
+
+    @GetMapping("/initializeViewRecord")
+    public Response<Void> setInitializeViewRecordCookie(HttpServletResponse response) {
+        cookieService.setHeaderInitializeViewRecordCookie(response, "", false);
+        return Response.success();
+    }
 
     @GetMapping("/all")
     public Response<List<PostsResponse>> getAllPosts() {

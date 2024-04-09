@@ -29,9 +29,9 @@ public class CookieService {
         setHeaderCookie(response, "Access_Token", token, expired, oneYear);
     }
 
-    public void setHeaderInitializeViewRecordCookie(HttpServletResponse response, String value, Boolean expired) {
+    public void setHeaderViewRecordCookie(HttpServletResponse response, String value) {
         Integer oneDay = 24 * 60 * 60;
-        setHeaderCookie(response, "postViewRecord", value, expired, oneDay);
+        setHeaderCookie(response, "postViewRecord", value, false, oneDay);
     }
 
     private void setHeaderCookie(HttpServletResponse response, String name, String value, Boolean expired, Integer cookieAge) {

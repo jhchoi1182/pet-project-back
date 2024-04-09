@@ -13,6 +13,7 @@ import com.springboot.petProject.service.post.PostService;
 import com.springboot.petProject.service.user.CookieService;
 import com.springboot.petProject.types.request.CategoryRequest;
 import com.springboot.petProject.types.request.SearchType;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,7 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,7 +41,7 @@ public class PostController {
 
     @GetMapping("/initializeViewRecord")
     public Response<Void> setInitializeViewRecordCookie(HttpServletResponse response) {
-        cookieService.setHeaderInitializeViewRecordCookie(response, "", false);
+        cookieService.setHeaderViewRecordCookie(response, "{}");
         return Response.success();
     }
 
@@ -63,9 +66,13 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletRequest request) {
+    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletResponse response, HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
-        DetailPostDto post = postService.getPost(postId);
+        Optional<Cookie> viewRecordCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> "postViewRecord".equals(cookie.getName()))
+                .findFirst();
+
+        DetailPostDto post = postService.getPost(postId, response, remoteAddr, viewRecordCookie);
         return Response.success(PostResponse.fromDto(post));
     }
 

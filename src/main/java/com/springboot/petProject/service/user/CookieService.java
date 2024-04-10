@@ -25,14 +25,24 @@ public class CookieService {
     }
 
     public void setHeaderAuthenticationCookie(HttpServletResponse response, String token, Boolean expired) {
+        Integer oneYear = 365 * 24 * 60 * 60;
+        setHeaderCookie(response, "Access_Token", token, expired, oneYear);
+    }
+
+    public void setHeaderViewRecordCookie(HttpServletResponse response, String value) {
+        Integer oneDay = 24 * 60 * 60;
+        setHeaderCookie(response, "postViewRecord", value, false, oneDay);
+    }
+
+    private void setHeaderCookie(HttpServletResponse response, String name, String value, Boolean expired, Integer cookieAge) {
         boolean isProd = Arrays.asList(env.getActiveProfiles()).contains("prod");
 
-        ResponseCookie cookie = ResponseCookie.from("Access_Token", token)
+        ResponseCookie cookie = ResponseCookie.from(name, value)
                 .httpOnly(true)
-                .secure(isProd)
+                .secure(true)
                 .sameSite(isProd ? "Strict" : "None")
                 .path("/")
-                .maxAge(expired ? 0 : 365 * 24 * 60 * 60)
+                .maxAge(expired ? 0 : cookieAge)
                 .build();
 
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());

@@ -1,6 +1,5 @@
 package com.springboot.petProject.service.user;
 
-import com.springboot.petProject.dto.response.user.UserLoginResponse;
 import com.springboot.petProject.dto.service.AuthDto;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.CustomExceptionHandler;
@@ -53,9 +52,8 @@ public class SocialLoginService {
         String username = "GOOGLE_" + email.split("@")[0];
         String nickname = "GOOGLE_" + email.split("@")[0];
         User user = ensureUniqueGoogleUser(email, username, nickname);
-        String password = user.getUsername();
 
-        String token = JwtTokenUtils.generateToken(user.getNickname(), encoder.encode(password), secretKey, expiredTimeMs);
+        String token = JwtTokenUtils.generateToken(user.getUsername(), user.getNickname(), secretKey, expiredTimeMs);
 
         return new AuthDto(token, user.getNickname());
     }

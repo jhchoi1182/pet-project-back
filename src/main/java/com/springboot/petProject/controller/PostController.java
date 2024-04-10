@@ -10,25 +10,44 @@ import com.springboot.petProject.dto.response.post.PostResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.post.PostService;
+import com.springboot.petProject.service.user.CookieService;
 import com.springboot.petProject.types.request.CategoryRequest;
 import com.springboot.petProject.types.request.SearchType;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
 
     private final PostService postService;
     private final ExceptionService exceptionService;
+    private final CookieService cookieService;
+
+    @GetMapping("/initializeViewRecord")
+    public Response<Void> setInitializeViewRecordCookie(HttpServletResponse response) {
+        String encodedViewRecords = URLEncoder.encode(new JSONObject().toString(), StandardCharsets.UTF_8);
+        cookieService.setHeaderViewRecordCookie(response, encodedViewRecords);
+        return Response.success();
+    }
 
     @GetMapping("/all")
     public Response<List<PostsResponse>> getAllPosts() {
@@ -50,9 +69,27 @@ public class PostController {
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 
+    @GetMapping("/{postId}/isr")
+    public Response<PostResponse> getPostForISR(@PathVariable Integer postId) {
+        DetailPostDto post = postService.getPostForISR(postId);
+        return Response.success(PostResponse.fromDto(post));
+    }
+
     @GetMapping("/{postId}")
-    public Response<PostResponse> getPost(@PathVariable Integer postId) {
-        DetailPostDto post = postService.getPost(postId);
+    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletResponse response, HttpServletRequest request, Authentication authentication) {
+        String remoteAddr = request.getRemoteAddr();
+
+        Cookie[] cookies = request.getCookies();
+        Optional<Cookie> viewRecordCookie = Optional.empty();
+
+        if (cookies != null) {
+            viewRecordCookie = Arrays.stream(cookies)
+                    .filter(cookie -> "postViewRecord".equals(cookie.getName()))
+                    .findFirst();
+        }
+        UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
+
+        DetailPostDto post = postService.getPost(postId, response, remoteAddr, viewRecordCookie, user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 
@@ -67,6 +104,13 @@ public class PostController {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
         DetailPostDto post = postService.update(postId, request.getCategory(), request.getTitle(), request.getContents(), request.getImages(), user.getUserId());
         return Response.success(PostResponse.fromDto(post));
+    }
+
+    @PatchMapping("/{postId}/toggle-like")
+    public Response<Void> updatePostLike(@PathVariable Integer postId, Authentication authentication) {
+        UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
+        postService.updatePostLike(postId, user.getUserId(), user.getUsername());
+        return Response.success();
     }
 
     @DeleteMapping("/{postId}")

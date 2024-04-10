@@ -62,6 +62,11 @@ public class PostService {
         return postRepository.findAll(spec, pageable).map(PostDto::fromEntity);
     }
 
+    public DetailPostDto getPostForISR(Integer postId) {
+        Post post = exceptionService.getPostOrThrowException(postId);
+        return DetailPostDto.fromEntity(post);
+    }
+
     public DetailPostDto getPost(Integer postId, HttpServletResponse response, String remoteAddr, Optional<Cookie> viewRecordCookie) {
         Post post = exceptionService.getPostOrThrowException(postId);
         JSONObject viewRecords =  postViewCountManager.updateViewRecords(viewRecordCookie);

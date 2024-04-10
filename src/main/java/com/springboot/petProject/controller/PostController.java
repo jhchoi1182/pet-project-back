@@ -69,6 +69,12 @@ public class PostController {
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 
+    @GetMapping("/isr/{postId}")
+    public Response<PostResponse> getPostForISR(@PathVariable Integer postId) {
+        DetailPostDto post = postService.getPostForISR(postId);
+        return Response.success(PostResponse.fromDto(post));
+    }
+
     @GetMapping("/{postId}")
     public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletResponse response, HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();

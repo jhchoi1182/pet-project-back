@@ -25,15 +25,15 @@ public class PostViewLog {
     @Column(name = "ip_address")
     private String ipAddress;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     @Column(name = "viewed_at")
     private Timestamp viewedAt;
 
     @Column(name = "removed_at")
     private Timestamp removedAt;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
 
     @PrePersist
     void createdAt() {

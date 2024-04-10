@@ -24,7 +24,7 @@ public class PostViewCountManager {
         JSONObject viewRecords;
         if (viewRecordCookie.isPresent()) {
             String decodedViewRecords = URLDecoder.decode(viewRecordCookie.get().getValue(), StandardCharsets.UTF_8);
-            viewRecords =  new JSONObject(decodedViewRecords);
+            viewRecords = new JSONObject(decodedViewRecords);
         } else {
             viewRecords = new JSONObject();
         }
@@ -64,10 +64,7 @@ public class PostViewCountManager {
     }
 
     private void addNewViewLog(Post post, String remoteAddr) {
-        PostViewLog newLog = new PostViewLog();
-        newLog.setIpAddress(remoteAddr);
-        newLog.setViewedAt(Timestamp.valueOf(LocalDateTime.now(KOREA_TIME)));
-        newLog.setPost(post);
+        PostViewLog newLog = PostViewLog.create(remoteAddr, post);
         post.getViewLogs().add(newLog);
     }
 

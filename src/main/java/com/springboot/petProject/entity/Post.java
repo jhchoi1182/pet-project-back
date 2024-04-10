@@ -49,9 +49,9 @@ public class Post {
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
-    private List<PostViewLog> viewLogs;
+    private List<PostViewLog> viewLogs = new ArrayList<>();
 
     @Column(name = "created_at")
     private Timestamp createdAt;

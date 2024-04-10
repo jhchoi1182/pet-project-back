@@ -49,7 +49,7 @@ cloud:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   token:
-    expired-time-ms: 604800000
+    expired-time-ms: 31536000000
 
 logging:
   level:

@@ -57,7 +57,7 @@ public class UserService {
         if (!encoder.matches(password, user.getPassword())) {
             throw new CustomExceptionHandler(ErrorCode.PASSWORDS_NOT_MATCHING);
         }
-        String token = JwtTokenUtils.generateToken(user.getNickname(), user.getPassword(), secretKey, expiredTimeMs);
+        String token = JwtTokenUtils.generateToken(user.getUsername(), user.getNickname(), secretKey, expiredTimeMs);
         return new AuthDto(token, user.getNickname());
     }
 
@@ -71,7 +71,7 @@ public class UserService {
 
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDto user) {
-            String token = JwtTokenUtils.generateToken(user.getNickname(), user.getPassword(), secretKey, expiredTimeMs);
+            String token = JwtTokenUtils.generateToken(user.getUsername(), user.getNickname(), secretKey, expiredTimeMs);
             return new AuthDto(token, user.getNickname());
         } else throw new CustomExceptionHandler(ErrorCode.INVALID_TOKEN, "No authentication information found.");
     }

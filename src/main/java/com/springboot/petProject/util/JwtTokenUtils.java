@@ -19,17 +19,17 @@ import java.util.Map;
 @Slf4j
 public class JwtTokenUtils {
 
-    public static UserDto validatedUser(UserRepository userRepository, String nickname, String password) {
-        return UserDto.fromEntity(userRepository.findByNickname(nickname).orElseThrow(() ->
-                new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", nickname))));
+    public static UserDto validatedUser(UserRepository userRepository, String username, String nickname) {
+        return UserDto.fromEntity(userRepository.findByUsername(username).orElseThrow(() ->
+                new CustomExceptionHandler(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", username))));
+    }
+
+    public static String getUsername(String token, String key) {
+        return extractClaims(token, key).get("username", String.class);
     }
 
     public static String getNickname(String token, String key) {
         return extractClaims(token, key).get("nickname", String.class);
-    }
-
-    public static String getPassword(String token, String key) {
-        return extractClaims(token, key).get("password", String.class);
     }
 
     public static boolean isExpired(String token, String key) {
@@ -42,11 +42,11 @@ public class JwtTokenUtils {
                 .build().parseSignedClaims(token).getPayload();
     }
 
-    public static String generateToken(String nickname, String encodedPassword, String key, long expiredTimeMs) {
+    public static String generateToken(String username, String nickname, String key, long expiredTimeMs) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("nickname", nickname);
-        claims.put("password", encodedPassword);
+        claims.put("username", username);
 
         long nowMillis = System.currentTimeMillis();
 

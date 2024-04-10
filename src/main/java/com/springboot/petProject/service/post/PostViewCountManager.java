@@ -3,9 +3,12 @@ package com.springboot.petProject.service.post;
 import com.springboot.petProject.entity.Post;
 import com.springboot.petProject.entity.PostViewLog;
 import jakarta.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -14,7 +17,19 @@ import java.util.Optional;
 import static com.springboot.petProject.util.DateUtil.KOREA_TIME;
 
 @Service
+@Slf4j
 public class PostViewCountManager {
+
+    public JSONObject updateViewRecords(Optional<Cookie> viewRecordCookie) {
+        JSONObject viewRecords;
+        if (viewRecordCookie.isPresent()) {
+            String decodedViewRecords = URLDecoder.decode(viewRecordCookie.get().getValue(), StandardCharsets.UTF_8);
+            viewRecords =  new JSONObject(decodedViewRecords);
+        } else {
+            viewRecords = new JSONObject();
+        }
+        return viewRecords;
+    }
 
     public boolean shouldIncreaseViewCount(Post post, Optional<Cookie> viewRecordCookie, String remoteAddr, JSONObject viewRecords, Integer postId) {
         boolean shouldIncreaseView = false;

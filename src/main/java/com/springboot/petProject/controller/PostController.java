@@ -19,11 +19,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +44,8 @@ public class PostController {
 
     @GetMapping("/initializeViewRecord")
     public Response<Void> setInitializeViewRecordCookie(HttpServletResponse response) {
-        cookieService.setHeaderViewRecordCookie(response, "{}");
+        String encodedViewRecords = URLEncoder.encode(new JSONObject().toString(), StandardCharsets.UTF_8);
+        cookieService.setHeaderViewRecordCookie(response, encodedViewRecords);
         return Response.success();
     }
 
@@ -68,9 +72,15 @@ public class PostController {
     @GetMapping("/{postId}")
     public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletResponse response, HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
-        Optional<Cookie> viewRecordCookie = Arrays.stream(request.getCookies())
-                .filter(cookie -> "postViewRecord".equals(cookie.getName()))
-                .findFirst();
+
+        Cookie[] cookies = request.getCookies();
+        Optional<Cookie> viewRecordCookie = Optional.empty();
+
+        if (cookies != null) {
+            viewRecordCookie = Arrays.stream(cookies)
+                    .filter(cookie -> "postViewRecord".equals(cookie.getName()))
+                    .findFirst();
+        }
 
         DetailPostDto post = postService.getPost(postId, response, remoteAddr, viewRecordCookie);
         return Response.success(PostResponse.fromDto(post));

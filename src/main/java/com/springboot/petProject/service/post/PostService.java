@@ -26,6 +26,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,15 +64,16 @@ public class PostService {
 
     public DetailPostDto getPost(Integer postId, HttpServletResponse response, String remoteAddr, Optional<Cookie> viewRecordCookie) {
         Post post = exceptionService.getPostOrThrowException(postId);
+        JSONObject viewRecords =  postViewCountManager.updateViewRecords(viewRecordCookie);
 
-        JSONObject viewRecords = new JSONObject();
         boolean shouldIncreaseView = postViewCountManager.shouldIncreaseViewCount(post, viewRecordCookie, remoteAddr, viewRecords, postId);
 
         if (shouldIncreaseView) {
             postViewCountManager.increaseViewCount(post, postId, viewRecords);
+            String encodedViewRecords = URLEncoder.encode(viewRecords.toString(), StandardCharsets.UTF_8);
+            cookieService.setHeaderViewRecordCookie(response, encodedViewRecords);
         }
 
-        cookieService.setHeaderViewRecordCookie(response, viewRecords.toString());
         return DetailPostDto.fromEntity(postRepository.save(post));
     }
 

@@ -31,6 +31,11 @@
   * jwt 토큰 생성 후 **응답 헤더에 쿠키 설정 (httpOnly, seecure, sameSite 설정으로 XSS, CSRF 공격 대비)**
     * 서버 URL을 프론트 엔드의 서브 도메인 주소로 전환하여 서드 파티 쿠키를 퍼스트 파티 쿠키로 처리되도록 변경 (Chrome 서드 파티 쿠키 제한 이슈 해결)
   * Spring Security를 이용해 인증 로직 전역 핸들링
+* 조회수 카운트 기능
+  * 조회수 어뷰징 방지를 위해 postId : LocalDateTime 값을 쿠키로 관리
+  * 의도적인 쿠키 삭제 어뷰징 방지를 위해 ip : LocalDateTime를 post의 필드로 관리
+* 좋아요 기능
+  * 좋아요 어뷰징 방지를 위해 로그인했을 때만 좋아요 가능하도록 하고, userId를 set 자료형으로 관리
 * Swagger를 통한 API 명세 작업
 * S3에 연결해 이미지 저장 후 MySQL에 post 테이블에 S3 URL 저장
 

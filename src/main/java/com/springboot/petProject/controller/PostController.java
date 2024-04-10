@@ -105,6 +105,13 @@ public class PostController {
         return Response.success(PostResponse.fromDto(post));
     }
 
+    @PatchMapping("/{postId}/toggle-like")
+    public Response<Void> updatePostLike(@PathVariable Integer postId, Authentication authentication) {
+        UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
+        postService.updatePostLike(postId, user.getUserId(), user.getUsername());
+        return Response.success();
+    }
+
     @DeleteMapping("/{postId}")
     public Response<Void> delete(@PathVariable Integer postId, Authentication authentication) {
         UserDto user = exceptionService.getAuthenticationPrincipal(authentication);

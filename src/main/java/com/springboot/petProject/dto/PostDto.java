@@ -34,7 +34,7 @@ public class PostDto {
                 entity.getUser().getNickname(),
                 entity.getComments().size(),
                 entity.getView(),
-                entity.getLikes(),
+                entity.getLikesUser().size(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

@@ -3,10 +3,12 @@ package com.springboot.petProject.service.post;
 import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.entity.Post;
+import com.springboot.petProject.entity.PostLikeUser;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
+import com.springboot.petProject.repository.PostLikeUserRepository;
 import com.springboot.petProject.repository.PostRepository;
 import com.springboot.petProject.repository.PostViewLogRepository;
 import com.springboot.petProject.service.ExceptionService;
@@ -20,6 +22,7 @@ import com.springboot.petProject.util.Validate;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,11 +39,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final PostViewLogRepository postViewLogRepository;
+    private final PostLikeUserRepository postLikeUserRepository;
     private final ExceptionService exceptionService;
     private final S3UploadService s3UploadService;
     private final CookieService cookieService;
@@ -123,6 +128,18 @@ public class PostService {
         return DetailPostDto.fromEntity(postRepository.save(post));
     }
 
+    @Transactional
+    public void updatePostLike(Integer postId, Integer userId, String username) {
+        Optional<PostLikeUser> existingLike = postLikeUserRepository.findByPostIdAndUserId(postId, userId);
+        if (existingLike.isPresent()) {
+            postLikeUserRepository.delete(existingLike.get());
+        } else {
+            User user = exceptionService.getUserOrThrowException(username);
+            Post post = exceptionService.getPostOrThrowException(postId);
+            postLikeUserRepository.save(PostLikeUser.add(post, user));
+        }
+    }
+
     private void validateTitleAndContentsNotNull(String title, String contents) {
         if (title == null || contents == null) {
             throw new CustomExceptionHandler(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
@@ -134,6 +151,7 @@ public class PostService {
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
         commentRepository.deleteAllByPost(post);
         postViewLogRepository.deleteAllByPost(post);
+        postLikeUserRepository.deleteAllByPost(post);
         postRepository.deleteByPost(post);
     }
 

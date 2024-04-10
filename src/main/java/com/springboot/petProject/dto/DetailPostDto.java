@@ -34,7 +34,7 @@ public class DetailPostDto {
                 entity.getImages(),
                 entity.getUser().getNickname(),
                 entity.getView(),
-                entity.getLikes(),
+                entity.getLikesUser().size(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

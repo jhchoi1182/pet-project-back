@@ -3,7 +3,6 @@ package com.springboot.petProject.service.post;
 import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
 import com.springboot.petProject.entity.Post;
-import com.springboot.petProject.entity.PostViewLog;
 import com.springboot.petProject.entity.User;
 import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
@@ -27,9 +26,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +41,7 @@ public class PostService {
     private final S3UploadService s3UploadService;
     private final CookieService cookieService;
     private final PostSearchSpecification postSearchSpecification;
+    private final PostViewCountManager postViewCountManager;
     private final Validate validate;
 
     public List<PostDto> getAllPosts() {
@@ -67,47 +64,13 @@ public class PostService {
         Post post = exceptionService.getPostOrThrowException(postId);
 
         JSONObject viewRecords = new JSONObject();
-        boolean shouldIncreaseView = false;
-
-        if (viewRecordCookie.isPresent()) {
-            viewRecords = new JSONObject(viewRecordCookie.get().getValue());
-            if (viewRecords.has(postId.toString())) {
-                LocalDateTime lastViewDateTime = LocalDateTime.parse(viewRecords.getString(postId.toString()));
-                if (ChronoUnit.HOURS.between(lastViewDateTime, LocalDateTime.now()) >= 24) {
-                    shouldIncreaseView = true;
-                }
-            } else {
-                shouldIncreaseView = true;
-            }
-        } else {
-            Optional<PostViewLog> currentRemoteAddr = post.getViewLogs().stream()
-                    .filter(log -> log.getIpAddress().equals(remoteAddr))
-                    .findFirst();
-
-            if (!currentRemoteAddr.isPresent()) {
-                shouldIncreaseView = true;
-                PostViewLog newLog = new PostViewLog();
-                newLog.setIpAddress(remoteAddr);
-                newLog.setViewedAt(Timestamp.valueOf(LocalDateTime.now()));
-                newLog.setPost(post);
-                post.getViewLogs().add(newLog);
-
-            } else {
-                LocalDateTime lastViewDateTime = currentRemoteAddr.get().getViewedAt().toLocalDateTime();
-                if (ChronoUnit.HOURS.between(lastViewDateTime, LocalDateTime.now()) > 24) {
-                    shouldIncreaseView = true;
-                    currentRemoteAddr.get().setViewedAt(Timestamp.valueOf(LocalDateTime.now()));
-                }
-            }
-        }
+        boolean shouldIncreaseView = postViewCountManager.shouldIncreaseViewCount(post, viewRecordCookie, remoteAddr, viewRecords, postId);
 
         if (shouldIncreaseView) {
-            post.setView(post.getView() + 1);
-            viewRecords.put(postId.toString(), LocalDateTime.now().toString());
+            postViewCountManager.increaseViewCount(post, postId, viewRecords);
         }
 
         cookieService.setHeaderViewRecordCookie(response, viewRecords.toString());
-
         return DetailPostDto.fromEntity(postRepository.save(post));
     }
 

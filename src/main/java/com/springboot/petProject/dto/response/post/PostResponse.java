@@ -21,6 +21,7 @@ public class PostResponse {
     private String nickname;
     private Integer view;
     private Integer likes;
+    private Boolean hasLiked;
     private String createdAt;
 
     public static PostResponse fromDto(DetailPostDto post) {
@@ -34,6 +35,7 @@ public class PostResponse {
                 post.getNickname(),
                 post.getView(),
                 post.getLikes(),
+                post.getHasLiked(),
                 DateUtil.formatTimestamp(post.getCreatedAt(), true)
         );
     }

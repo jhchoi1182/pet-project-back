@@ -22,5 +22,4 @@ public interface PostLikeUserRepository extends JpaRepository<PostLikeUser, Inte
     @Query("DELETE FROM PostLikeUser postLikeUser WHERE postLikeUser.post = :post")
     void deleteAllByPost(@Param("post") Post post);
 
-
 }

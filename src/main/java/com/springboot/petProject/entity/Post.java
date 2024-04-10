@@ -75,6 +75,10 @@ public class Post {
         return this.viewLogs;
     }
 
+    public boolean hasLikedByUser(Integer userId) {
+        return this.likesUser.stream().anyMatch(like -> like.getUser().getId().equals(userId));
+    }
+
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());

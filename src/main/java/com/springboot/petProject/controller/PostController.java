@@ -69,14 +69,14 @@ public class PostController {
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 
-    @GetMapping("/isr/{postId}")
+    @GetMapping("/{postId}/isr")
     public Response<PostResponse> getPostForISR(@PathVariable Integer postId) {
         DetailPostDto post = postService.getPostForISR(postId);
         return Response.success(PostResponse.fromDto(post));
     }
 
     @GetMapping("/{postId}")
-    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletResponse response, HttpServletRequest request) {
+    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletResponse response, HttpServletRequest request, Authentication authentication) {
         String remoteAddr = request.getRemoteAddr();
 
         Cookie[] cookies = request.getCookies();
@@ -87,8 +87,9 @@ public class PostController {
                     .filter(cookie -> "postViewRecord".equals(cookie.getName()))
                     .findFirst();
         }
+        UserDto user = exceptionService.getAuthenticationPrincipal(authentication);
 
-        DetailPostDto post = postService.getPost(postId, response, remoteAddr, viewRecordCookie);
+        DetailPostDto post = postService.getPost(postId, response, remoteAddr, viewRecordCookie, user.getUserId());
         return Response.success(PostResponse.fromDto(post));
     }
 

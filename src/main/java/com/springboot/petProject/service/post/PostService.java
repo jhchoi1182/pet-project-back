@@ -74,7 +74,7 @@ public class PostService {
         return DetailPostDto.fromEntity(post);
     }
 
-    public DetailPostDto getPost(Integer postId, HttpServletResponse response, String remoteAddr, Optional<Cookie> viewRecordCookie) {
+    public DetailPostDto getPost(Integer postId, HttpServletResponse response, String remoteAddr, Optional<Cookie> viewRecordCookie, Integer userId) {
         Post post = exceptionService.getPostOrThrowException(postId);
         JSONObject viewRecords =  postViewCountManager.updateViewRecords(viewRecordCookie);
 
@@ -86,7 +86,7 @@ public class PostService {
             cookieService.setHeaderViewRecordCookie(response, encodedViewRecords);
         }
 
-        return DetailPostDto.fromEntity(postRepository.save(post));
+        return DetailPostDto.fromEntity(postRepository.save(post), userId);
     }
 
     @Transactional

@@ -11,8 +11,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import static com.springboot.petProject.util.DateUtil.KOREA_TIME;
+
 @Service
 public class PostViewCountManager {
+
     public boolean shouldIncreaseViewCount(Post post, Optional<Cookie> viewRecordCookie, String remoteAddr, JSONObject viewRecords, Integer postId) {
         boolean shouldIncreaseView = false;
         if (viewRecordCookie.isPresent()) {
@@ -29,7 +32,7 @@ public class PostViewCountManager {
 
     private boolean has24HoursElapsedSinceLastView(JSONObject viewRecords, Integer postId) {
         LocalDateTime lastViewDateTime = LocalDateTime.parse(viewRecords.getString(postId.toString()));
-        return ChronoUnit.HOURS.between(lastViewDateTime, LocalDateTime.now()) >= 24;
+        return ChronoUnit.HOURS.between(lastViewDateTime, LocalDateTime.now(KOREA_TIME)) >= 24;
     }
 
     private boolean shouldIncreaseViewBasedOnIP(Post post, String remoteAddr) {
@@ -48,14 +51,14 @@ public class PostViewCountManager {
     private void addNewViewLog(Post post, String remoteAddr) {
         PostViewLog newLog = new PostViewLog();
         newLog.setIpAddress(remoteAddr);
-        newLog.setViewedAt(Timestamp.valueOf(LocalDateTime.now()));
+        newLog.setViewedAt(Timestamp.valueOf(LocalDateTime.now(KOREA_TIME)));
         newLog.setPost(post);
         post.getViewLogs().add(newLog);
     }
 
     private boolean updateViewLogIf24HoursElapsed(PostViewLog currentRemoteAddrViewLog) {
         LocalDateTime lastViewDateTime = currentRemoteAddrViewLog.getViewedAt().toLocalDateTime();
-        if (ChronoUnit.HOURS.between(lastViewDateTime, LocalDateTime.now()) > 24) {
+        if (ChronoUnit.HOURS.between(lastViewDateTime, LocalDateTime.now(KOREA_TIME)) > 24) {
             currentRemoteAddrViewLog.setViewedAt(Timestamp.valueOf(LocalDateTime.now()));
             return true;
         }
@@ -64,6 +67,6 @@ public class PostViewCountManager {
 
     public void increaseViewCount(Post post, Integer postId, JSONObject viewRecords) {
         post.setView(post.getView() + 1);
-        viewRecords.put(postId.toString(), LocalDateTime.now().toString());
+        viewRecords.put(postId.toString(), LocalDateTime.now(KOREA_TIME).toString());
     }
 }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -60,6 +61,13 @@ public class Post {
 
     @Column(name = "removed_at")
     private Timestamp removedAt;
+
+    public List<PostViewLog> getViewLogs() {
+        if (this.viewLogs == null) {
+            this.viewLogs = new ArrayList<>();
+        }
+        return this.viewLogs;
+    }
 
     @PrePersist
     void createdAt() {

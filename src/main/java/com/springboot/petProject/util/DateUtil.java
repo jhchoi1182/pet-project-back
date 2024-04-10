@@ -8,13 +8,16 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
+
+    public static final ZoneId KOREA_TIME = ZoneId.of("Asia/Seoul");
+
     public static String formatTimestamp(Timestamp timestamp, Boolean isYearRequired) {
 
         Instant instant = timestamp.toInstant();
-        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.of("Asia/Seoul"));
+        ZonedDateTime zonedDateTime = instant.atZone(KOREA_TIME);
         LocalDateTime targetTime = zonedDateTime.toLocalDateTime();
 
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now(KOREA_TIME);
         LocalDateTime firstDayOfYear = LocalDateTime.of(now.getYear(), 1, 1, 0, 0);
         LocalDateTime todayMidnight = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0);
 

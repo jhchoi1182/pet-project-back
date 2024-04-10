@@ -8,6 +8,7 @@ import com.springboot.petProject.exception.CustomExceptionHandler;
 import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostRepository;
+import com.springboot.petProject.repository.PostViewLogRepository;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.S3UploadService;
 import com.springboot.petProject.service.user.CookieService;
@@ -39,6 +40,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final PostViewLogRepository postViewLogRepository;
     private final ExceptionService exceptionService;
     private final S3UploadService s3UploadService;
     private final CookieService cookieService;
@@ -131,6 +133,7 @@ public class PostService {
     public void deletePost(Integer postId, Integer userId) {
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
         commentRepository.deleteAllByPost(post);
+        postViewLogRepository.deleteAllByPost(post);
         postRepository.deleteByPost(post);
     }
 

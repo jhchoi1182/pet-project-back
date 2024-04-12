@@ -19,6 +19,7 @@ public class PostsResponse {
     private Integer commentsCount;
     private Integer view;
     private Integer likes;
+    private Boolean isPopular;
     private String createdAt;
     private Timestamp updatedAt;
 
@@ -31,6 +32,7 @@ public class PostsResponse {
                 post.getCommentsCount(),
                 post.getView(),
                 post.getLikes(),
+                post.getIsPopular(),
                 DateUtil.formatTimestamp(post.getCreatedAt()),
                 post.getUpdatedAt()
         );

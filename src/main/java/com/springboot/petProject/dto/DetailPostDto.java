@@ -21,6 +21,7 @@ public class DetailPostDto {
     private String nickname;
     private Integer view;
     private Integer likes;
+    private Boolean isPopular;
     private Boolean hasLiked;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -36,6 +37,7 @@ public class DetailPostDto {
                 entity.getUser().getNickname(),
                 entity.getView(),
                 entity.getLikesUser().size(),
+                entity.getIsPopular(),
                 false,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
@@ -55,6 +57,7 @@ public class DetailPostDto {
                 entity.getUser().getNickname(),
                 entity.getView(),
                 entity.getLikesUser().size(),
+                entity.getIsPopular(),
                 hasLiked,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

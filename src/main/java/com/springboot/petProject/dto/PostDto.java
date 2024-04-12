@@ -21,6 +21,7 @@ public class PostDto {
     private Integer commentsCount;
     private Integer view;
     private Integer likes;
+    private Boolean isPopular;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -35,6 +36,7 @@ public class PostDto {
                 entity.getComments().size(),
                 entity.getView(),
                 entity.getLikesUser().size(),
+                entity.getIsPopular(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

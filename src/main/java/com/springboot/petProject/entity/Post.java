@@ -41,7 +41,7 @@ public class Post {
 
     private Integer view = 0;
 
-//    private Boolean isPopular = false;
+    private Boolean isPopular = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -88,7 +88,7 @@ public class Post {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(PostCategory category, String title, String contents, String noHtmlContents, List<String> images, User user) {
+    public static Post of(PostCategory category, String title, String contents, String noHtmlContents, List<String> images, User user, Boolean isPopular) {
         Post entity = new Post();
         entity.setCategory(category);
         entity.setTitle(title);
@@ -96,7 +96,7 @@ public class Post {
         entity.setNoHtmlContents(noHtmlContents);
         entity.setImages(images);
         entity.setUser(user);
-//        entity.setIsPopular(isPopular);
+        entity.setIsPopular(isPopular);
         return entity;
     }
 

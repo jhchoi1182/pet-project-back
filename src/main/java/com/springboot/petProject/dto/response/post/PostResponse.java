@@ -22,6 +22,7 @@ public class PostResponse {
     private Integer view;
     private Integer likes;
     private Boolean hasLiked;
+    private Boolean isPopular;
     private String createdAt;
 
     public static PostResponse fromDto(DetailPostDto post) {
@@ -36,6 +37,7 @@ public class PostResponse {
                 post.getView(),
                 post.getLikes(),
                 post.getHasLiked(),
+                post.getIsPopular(),
                 DateUtil.formatTimestamp(post.getCreatedAt(), true)
         );
     }

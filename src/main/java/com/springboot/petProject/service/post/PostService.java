@@ -99,7 +99,7 @@ public class PostService {
         String filteredContents = HtmlTextUtil.extractTextFromHtml(contents);
         List<String> images = uploadImagesToS3(base64Images);
 
-        postRepository.save(Post.of(category, title, contents, filteredContents, images, user));
+        postRepository.save(Post.of(category, title, contents, filteredContents, images, user, false));
     }
 
     private List<String> uploadImagesToS3(List<String> base64Images) {
@@ -124,19 +124,30 @@ public class PostService {
         post.setContents(contents);
         post.setNoHtmlContents(filteredContents);
         post.setImages(images);
-        
+
         return DetailPostDto.fromEntity(postRepository.save(post));
     }
 
     @Transactional
     public void updatePostLike(Integer postId, Integer userId, String username) {
         Optional<PostLikeUser> existingLike = postLikeUserRepository.findByPostIdAndUserId(postId, userId);
+        Post post = exceptionService.getPostOrThrowException(postId);
+
         if (existingLike.isPresent()) {
             postLikeUserRepository.delete(existingLike.get());
         } else {
             User user = exceptionService.getUserOrThrowException(username);
-            Post post = exceptionService.getPostOrThrowException(postId);
             postLikeUserRepository.save(PostLikeUser.add(post, user));
+        }
+        Integer likes = postLikeUserRepository.countLikesByPostId(postId);
+        setPopular(likes, post);
+    }
+
+    private void setPopular(Integer likes, Post post) {
+        boolean isPopular = likes > 15;
+        if (post.getIsPopular() != isPopular) {
+            post.setIsPopular(isPopular);
+            postRepository.save(post);
         }
     }
 

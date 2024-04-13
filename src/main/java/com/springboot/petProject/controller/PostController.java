@@ -7,6 +7,7 @@ import com.springboot.petProject.dto.request.post.PostCreateRequest;
 import com.springboot.petProject.dto.request.post.PostUpdateRequest;
 import com.springboot.petProject.dto.response.Response;
 import com.springboot.petProject.dto.response.post.PostResponse;
+import com.springboot.petProject.dto.response.post.PostViewResponse;
 import com.springboot.petProject.dto.response.post.PostsResponse;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.post.PostService;
@@ -66,17 +67,17 @@ public class PostController {
         return Response.success(posts.map(PostsResponse::fromDto));
     }
 
-    @GetMapping("/{postId}/isr")
-    public Response<PostResponse> getPostForISR(@PathVariable Integer postId) {
-        DetailPostDto post = postService.getPostForISR(postId);
+    @GetMapping("/{postId}")
+    public Response<PostResponse> getPost(@PathVariable Integer postId, Authentication authentication) {
+        DetailPostDto post = postService.getPost(postId, authentication);
         return Response.success(PostResponse.fromDto(post));
     }
 
-    @GetMapping("/{postId}")
-    public Response<PostResponse> getPost(@PathVariable Integer postId, HttpServletRequest request, Authentication authentication) {
+    @PatchMapping("/{postId}/views")
+    public Response<PostViewResponse> updateViews(@PathVariable Integer postId, HttpServletRequest request, Authentication authentication) {
         String remoteAddr = request.getRemoteAddr();
-        DetailPostDto post = postService.getPost(postId, remoteAddr, authentication);
-        return Response.success(PostResponse.fromDto(post));
+        Integer views = postService.updateViews(postId, remoteAddr, authentication);
+        return Response.success(new PostViewResponse(views));
     }
 
     @PostMapping

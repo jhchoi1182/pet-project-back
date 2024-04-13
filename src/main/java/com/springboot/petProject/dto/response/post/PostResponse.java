@@ -19,7 +19,7 @@ public class PostResponse {
     private String noHtmlContents;
     private List<String> images;
     private String nickname;
-    private Integer view;
+    private Integer views;
     private Integer likes;
     private Boolean hasLiked;
     private Boolean isPopular;
@@ -34,7 +34,7 @@ public class PostResponse {
                 post.getNoHtmlContents(),
                 post.getImages(),
                 post.getNickname(),
-                post.getView(),
+                post.getViews(),
                 post.getLikes(),
                 post.getHasLiked(),
                 post.getIsPopular(),

@@ -19,7 +19,7 @@ public class DetailPostDto {
     private String noHtmlContents;
     private List<String> images;
     private String nickname;
-    private Integer view;
+    private Integer views;
     private Integer likes;
     private Boolean isPopular;
     private Boolean hasLiked;
@@ -35,7 +35,7 @@ public class DetailPostDto {
                 entity.getNoHtmlContents(),
                 entity.getImages(),
                 entity.getUser().getNickname(),
-                entity.getView(),
+                entity.getViews(),
                 entity.getLikesUser().size(),
                 entity.getIsPopular(),
                 false,
@@ -55,7 +55,7 @@ public class DetailPostDto {
                 entity.getNoHtmlContents(),
                 entity.getImages(),
                 entity.getUser().getNickname(),
-                entity.getView(),
+                entity.getViews(),
                 entity.getLikesUser().size(),
                 entity.getIsPopular(),
                 hasLiked,

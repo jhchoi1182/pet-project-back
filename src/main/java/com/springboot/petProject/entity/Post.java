@@ -39,7 +39,7 @@ public class Post {
 
     private List<String> images;
 
-    private Integer view = 0;
+    private Integer views = 0;
 
     private Boolean isPopular = false;
 

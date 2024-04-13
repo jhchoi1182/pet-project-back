@@ -1,6 +1,6 @@
 package com.springboot.petProject.dto;
 
-import com.springboot.petProject.entity.PostViewLog;
+import com.springboot.petProject.entity.PostViewUserLog;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,16 +8,16 @@ import java.sql.Timestamp;
 
 @AllArgsConstructor
 @Getter
-public class PostViewLogDto {
+public class PostViewUserLogDto {
 
     private Integer postViewLogId;
-    private String ipAddress;
+    private String username;
     private Timestamp viewedAt;
 
-    public static PostViewLogDto fromEntity(PostViewLog entity) {
-        return new PostViewLogDto(
+    public static PostViewUserLogDto fromEntity(PostViewUserLog entity) {
+        return new PostViewUserLogDto(
                 entity.getId(),
-                entity.getIpAddress(),
+                entity.getUser().getUsername(),
                 entity.getViewedAt()
         );
     }

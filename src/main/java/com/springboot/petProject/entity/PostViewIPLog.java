@@ -10,16 +10,16 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "`post_view_log`")
+@Table(name = "`post_view_ip_log`")
 @Setter
 @Getter
-@SQLDelete(sql = "UPDATE `post_view_log` SET removed_at = NOW() WHERE post_view_log_id=?")
+@SQLDelete(sql = "UPDATE `post_view_ip_log` SET removed_at = NOW() WHERE post_view_ip_log_id=?")
 @SQLRestriction("removed_at is NULL")
-public class PostViewLog {
+public class PostViewIPLog {
 
     @Id
     @GeneratedValue
-    @Column(name = "post_view_log_id")
+    @Column(name = "post_view_ip_log_id")
     private Integer id;
 
     @Column(name = "ip_address")
@@ -40,8 +40,8 @@ public class PostViewLog {
         this.viewedAt = Timestamp.from(Instant.now());
     }
 
-    public static PostViewLog create(String ipAddress, Post post) {
-        PostViewLog entity = new PostViewLog();
+    public static PostViewIPLog add(String ipAddress, Post post) {
+        PostViewIPLog entity = new PostViewIPLog();
         entity.setIpAddress(ipAddress);
         entity.setPost(post);
         return entity;

@@ -19,8 +19,9 @@ public class DetailPostDto {
     private String noHtmlContents;
     private List<String> images;
     private String nickname;
-    private Integer view;
+    private Integer views;
     private Integer likes;
+    private Boolean isPopular;
     private Boolean hasLiked;
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -34,16 +35,23 @@ public class DetailPostDto {
                 entity.getNoHtmlContents(),
                 entity.getImages(),
                 entity.getUser().getNickname(),
-                entity.getView(),
+                entity.getViews(),
                 entity.getLikesUser().size(),
+                entity.getIsPopular(),
                 false,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
     }
 
-    public static DetailPostDto fromEntity(Post entity, Integer userId) {
-        Boolean hasLiked = entity.hasLikedByUser(userId);
+    public static DetailPostDto fromEntity(Post entity, UserDto userDto) {
+        Boolean hasLiked;
+
+        if (userDto == null) {
+            hasLiked = false;
+        } else {
+            hasLiked = entity.hasLikedByUser(userDto.getUserId());
+        }
 
         return new DetailPostDto(
                 entity.getId(),
@@ -53,8 +61,9 @@ public class DetailPostDto {
                 entity.getNoHtmlContents(),
                 entity.getImages(),
                 entity.getUser().getNickname(),
-                entity.getView(),
+                entity.getViews(),
                 entity.getLikesUser().size(),
+                entity.getIsPopular(),
                 hasLiked,
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()

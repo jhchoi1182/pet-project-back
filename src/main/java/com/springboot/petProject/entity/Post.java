@@ -9,7 +9,6 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,9 +38,9 @@ public class Post {
 
     private List<String> images;
 
-    private Integer view = 0;
+    private Integer views = 0;
 
-//    private Boolean isPopular = false;
+    private Boolean isPopular = false;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -53,7 +52,11 @@ public class Post {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
-    private List<PostViewLog> viewLogs = new ArrayList<>();
+    private Set<PostViewIPLog> viewIPLogs = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "post_id")
+    private Set<PostViewUserLog> viewUserLogs = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -68,11 +71,18 @@ public class Post {
     @Column(name = "removed_at")
     private Timestamp removedAt;
 
-    public List<PostViewLog> getViewLogs() {
-        if (this.viewLogs == null) {
-            this.viewLogs = new ArrayList<>();
+    public Set<PostViewIPLog> getViewIPLogs() {
+        if (this.viewIPLogs == null) {
+            this.viewIPLogs = new HashSet<>();
         }
-        return this.viewLogs;
+        return this.viewIPLogs;
+    }
+
+    public Set<PostViewUserLog> getViewUserLogs() {
+        if (this.viewUserLogs == null) {
+            this.viewUserLogs = new HashSet<>();
+        }
+        return this.viewUserLogs;
     }
 
     public boolean hasLikedByUser(Integer userId) {
@@ -88,7 +98,7 @@ public class Post {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(PostCategory category, String title, String contents, String noHtmlContents, List<String> images, User user) {
+    public static Post of(PostCategory category, String title, String contents, String noHtmlContents, List<String> images, User user, Boolean isPopular) {
         Post entity = new Post();
         entity.setCategory(category);
         entity.setTitle(title);
@@ -96,7 +106,7 @@ public class Post {
         entity.setNoHtmlContents(noHtmlContents);
         entity.setImages(images);
         entity.setUser(user);
-//        entity.setIsPopular(isPopular);
+        entity.setIsPopular(isPopular);
         return entity;
     }
 

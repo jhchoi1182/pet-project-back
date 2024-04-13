@@ -17,8 +17,9 @@ public class PostsResponse {
     private String title;
     private String nickname;
     private Integer commentsCount;
-    private Integer view;
+    private Integer views;
     private Integer likes;
+    private Boolean isPopular;
     private String createdAt;
     private Timestamp updatedAt;
 
@@ -29,8 +30,9 @@ public class PostsResponse {
                 post.getTitle(),
                 post.getNickname(),
                 post.getCommentsCount(),
-                post.getView(),
+                post.getViews(),
                 post.getLikes(),
+                post.getIsPopular(),
                 DateUtil.formatTimestamp(post.getCreatedAt()),
                 post.getUpdatedAt()
         );

@@ -24,7 +24,8 @@ public class PetProjectApplication {
 								"https://next-todo-mu.vercel.app",
 								"https://jihyeon-pet-project.vercel.app",
 								"https://study-sync-mu.vercel.app",
-								"https://www.studysync.store"
+								"https://www.studysync.store",
+								"https://pet-project-front.vercel.app"
 						)
 						.allowCredentials(true);
 			}

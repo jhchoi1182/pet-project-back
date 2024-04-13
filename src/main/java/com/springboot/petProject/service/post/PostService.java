@@ -66,12 +66,16 @@ public class PostService {
         return postRepository.findAll(spec, pageable).map(PostDto::fromEntity);
     }
 
-    public DetailPostDto getPostForISR(Integer postId) {
+    public DetailPostDto getPost(Integer postId, Authentication authentication) {
+        UserDto userDto = null;
+        if (authentication != null) {
+            userDto = exceptionService.getAuthenticationPrincipal(authentication);
+        }
         Post post = exceptionService.getPostOrThrowException(postId);
-        return DetailPostDto.fromEntity(post);
+        return DetailPostDto.fromEntity(post, userDto);
     }
 
-    public DetailPostDto getPost(Integer postId, String remoteAddr, Authentication authentication) {
+    public Integer updateViews(Integer postId, String remoteAddr, Authentication authentication) {
         Post post = exceptionService.getPostOrThrowException(postId);
 
         UserDto userDto = null;
@@ -83,9 +87,10 @@ public class PostService {
 
         if (shouldIncreaseView) {
             post.setViews(post.getViews() + 1);
+            postRepository.save(post);
         }
 
-        return DetailPostDto.fromEntity(postRepository.save(post), userDto);
+        return post.getViews();
     }
 
     @Transactional

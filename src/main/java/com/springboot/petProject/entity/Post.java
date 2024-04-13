@@ -53,7 +53,11 @@ public class Post {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
-    private List<PostViewLog> viewLogs = new ArrayList<>();
+    private List<PostViewIPLog> viewIPLogs = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "post_id")
+    private List<PostViewUserLog> viewUserLogs = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -68,11 +72,18 @@ public class Post {
     @Column(name = "removed_at")
     private Timestamp removedAt;
 
-    public List<PostViewLog> getViewLogs() {
-        if (this.viewLogs == null) {
-            this.viewLogs = new ArrayList<>();
+    public List<PostViewIPLog> getViewIPLogs() {
+        if (this.viewIPLogs == null) {
+            this.viewIPLogs = new ArrayList<>();
         }
-        return this.viewLogs;
+        return this.viewIPLogs;
+    }
+
+    public List<PostViewUserLog> getViewUserLogs() {
+        if (this.viewUserLogs == null) {
+            this.viewUserLogs = new ArrayList<>();
+        }
+        return this.viewUserLogs;
     }
 
     public boolean hasLikedByUser(Integer userId) {

@@ -9,7 +9,6 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,11 +52,11 @@ public class Post {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
-    private List<PostViewIPLog> viewIPLogs = new ArrayList<>();
+    private Set<PostViewIPLog> viewIPLogs = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
-    private List<PostViewUserLog> viewUserLogs = new ArrayList<>();
+    private Set<PostViewUserLog> viewUserLogs = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
@@ -72,16 +71,16 @@ public class Post {
     @Column(name = "removed_at")
     private Timestamp removedAt;
 
-    public List<PostViewIPLog> getViewIPLogs() {
+    public Set<PostViewIPLog> getViewIPLogs() {
         if (this.viewIPLogs == null) {
-            this.viewIPLogs = new ArrayList<>();
+            this.viewIPLogs = new HashSet<>();
         }
         return this.viewIPLogs;
     }
 
-    public List<PostViewUserLog> getViewUserLogs() {
+    public Set<PostViewUserLog> getViewUserLogs() {
         if (this.viewUserLogs == null) {
-            this.viewUserLogs = new ArrayList<>();
+            this.viewUserLogs = new HashSet<>();
         }
         return this.viewUserLogs;
     }

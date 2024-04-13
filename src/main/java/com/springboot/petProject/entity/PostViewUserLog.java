@@ -23,12 +23,12 @@ public class PostViewUserLog {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "viewed_at")
     private Timestamp viewedAt;
@@ -47,4 +47,5 @@ public class PostViewUserLog {
         entity.setPost(post);
         return entity;
     }
+
 }

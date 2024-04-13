@@ -2,6 +2,7 @@ package com.springboot.petProject.service.post;
 
 import com.springboot.petProject.dto.DetailPostDto;
 import com.springboot.petProject.dto.PostDto;
+import com.springboot.petProject.dto.UserDto;
 import com.springboot.petProject.entity.Post;
 import com.springboot.petProject.entity.PostLikeUser;
 import com.springboot.petProject.entity.User;
@@ -10,7 +11,7 @@ import com.springboot.petProject.exception.ErrorCode;
 import com.springboot.petProject.repository.CommentRepository;
 import com.springboot.petProject.repository.PostLikeUserRepository;
 import com.springboot.petProject.repository.PostRepository;
-import com.springboot.petProject.repository.PostViewLogRepository;
+import com.springboot.petProject.repository.PostViewIPLogRepository;
 import com.springboot.petProject.service.ExceptionService;
 import com.springboot.petProject.service.S3UploadService;
 import com.springboot.petProject.service.user.CookieService;
@@ -19,19 +20,15 @@ import com.springboot.petProject.types.request.CategoryRequest;
 import com.springboot.petProject.types.request.SearchType;
 import com.springboot.petProject.util.HtmlTextUtil;
 import com.springboot.petProject.util.Validate;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +41,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final PostViewLogRepository postViewLogRepository;
+    private final PostViewIPLogRepository postViewIPLogRepository;
     private final PostLikeUserRepository postLikeUserRepository;
     private final ExceptionService exceptionService;
     private final S3UploadService s3UploadService;
@@ -74,19 +71,21 @@ public class PostService {
         return DetailPostDto.fromEntity(post);
     }
 
-    public DetailPostDto getPost(Integer postId, HttpServletResponse response, String remoteAddr, Optional<Cookie> viewRecordCookie, Integer userId) {
+    public DetailPostDto getPost(Integer postId, String remoteAddr, Authentication authentication) {
         Post post = exceptionService.getPostOrThrowException(postId);
-        JSONObject viewRecords =  postViewCountManager.updateViewRecords(viewRecordCookie);
 
-        boolean shouldIncreaseView = postViewCountManager.shouldIncreaseViewCount(post, viewRecordCookie, remoteAddr, viewRecords, postId);
-
-        if (shouldIncreaseView) {
-            postViewCountManager.increaseViewCount(post, postId, viewRecords);
-            String encodedViewRecords = URLEncoder.encode(viewRecords.toString(), StandardCharsets.UTF_8);
-            cookieService.setHeaderViewRecordCookie(response, encodedViewRecords);
+        UserDto userDto = null;
+        if (authentication != null) {
+            userDto = exceptionService.getAuthenticationPrincipal(authentication);
         }
 
-        return DetailPostDto.fromEntity(postRepository.save(post), userId);
+        boolean shouldIncreaseView = postViewCountManager.shouldIncreaseViewCount(post, remoteAddr, userDto);
+
+        if (shouldIncreaseView) {
+            post.setViews(post.getViews() + 1);
+        }
+
+        return DetailPostDto.fromEntity(postRepository.save(post), userDto);
     }
 
     @Transactional
@@ -128,6 +127,12 @@ public class PostService {
         return DetailPostDto.fromEntity(postRepository.save(post));
     }
 
+    private void validateTitleAndContentsNotNull(String title, String contents) {
+        if (title == null || contents == null) {
+            throw new CustomExceptionHandler(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
+        }
+    }
+
     @Transactional
     public void updatePostLike(Integer postId, Integer userId, String username) {
         Optional<PostLikeUser> existingLike = postLikeUserRepository.findByPostIdAndUserId(postId, userId);
@@ -151,17 +156,11 @@ public class PostService {
         }
     }
 
-    private void validateTitleAndContentsNotNull(String title, String contents) {
-        if (title == null || contents == null) {
-            throw new CustomExceptionHandler(ErrorCode.HTTP_MESSAGE_NOT_READABLE);
-        }
-    }
-
     @Transactional
     public void deletePost(Integer postId, Integer userId) {
         Post post = exceptionService.getPostIfAuthorized(postId, userId);
         commentRepository.deleteAllByPost(post);
-        postViewLogRepository.deleteAllByPost(post);
+        postViewIPLogRepository.deleteAllByPost(post);
         postLikeUserRepository.deleteAllByPost(post);
         postRepository.deleteByPost(post);
     }

@@ -44,8 +44,14 @@ public class DetailPostDto {
         );
     }
 
-    public static DetailPostDto fromEntity(Post entity, Integer userId) {
-        Boolean hasLiked = entity.hasLikedByUser(userId);
+    public static DetailPostDto fromEntity(Post entity, UserDto userDto) {
+        Boolean hasLiked;
+
+        if (userDto == null) {
+            hasLiked = false;
+        } else {
+            hasLiked = entity.hasLikedByUser(userDto.getUserId());
+        }
 
         return new DetailPostDto(
                 entity.getId(),

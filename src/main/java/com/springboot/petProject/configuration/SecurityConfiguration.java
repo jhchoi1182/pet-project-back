@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                                 "/swagger-resources/**", "/webjars/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/post", "/api/post/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/post/*/views").permitAll()
                         .requestMatchers(HttpMethod.POST,
                                 "/api/user/check-username", "/api/user/check-nickname",
                                 "/api/user/signup", "/api/user/login", "/api/user/google"
